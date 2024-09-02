@@ -1,0 +1,9 @@
+# Ignore Visual Studio files
+.vs/
+
+# Ignore local database files and logs
+ForumApp/App_Data/*.mdf
+ForumApp/App_Data/*.ldf
+
+# Ignore package directory
+packages/

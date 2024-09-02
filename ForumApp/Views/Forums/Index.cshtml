@@ -1,0 +1,17 @@
+﻿﻿@model IEnumerable<ForumApp.Models.Forum>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Forums</h2>
+
+@foreach (var forum in Model)
+{
+    <div>
+        <h3>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</h3>
+        <p>@forum.Description</p>
+    </div>
+}
+
+@Html.ActionLink("Create New Forum", "Create")

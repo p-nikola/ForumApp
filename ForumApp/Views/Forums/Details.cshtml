@@ -1,0 +1,31 @@
+﻿﻿@model ForumApp.Models.Forum
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+
+<h3>Posts</h3>
+
+@if (Model.Posts.Any())
+{
+    foreach (var post in Model.Posts)
+    {
+        <div>
+            <h4>@Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId }, new { @class = "btn btn-primary" })</h4>
+            <p>@post.Content</p>
+            <p><small>Posted on @post.DateCreated by @post.UserId</small></p>
+            <hr />
+        </div>
+    }
+}
+else
+{
+    <p>No posts yet. Be the first to post!</p>
+}
+
+<p>
+    @Html.ActionLink("Create New Post", "Create", "Posts", new { forumId = Model.ForumId }, new { @class = "btn btn-primary" })
+</p>
+
+<div>
+    @Html.ActionLink("Back to Forum List", "Index")
+</div>

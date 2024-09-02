@@ -1,0 +1,60 @@
+﻿﻿@model ForumApp.Models.Post
+
+<h2>@Model.Title</h2>
+<p>@Model.Content</p>
+<p>Posted on @Model.DateCreated by @Model.UserId</p>
+
+<h3>Comments</h3>
+
+<h4>Leave a Comment</h4>
+@using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { id = "postCommentForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PostId)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Content, "Comment")
+        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Post Comment" class="btn btn-primary" />
+    </div>
+    <div id="postCommentError" class="text-danger"></div>
+}
+
+@if (Model.Comments.Any())
+{
+    @* Display top-level comments *@
+    @Html.Partial("_CommentList", Model.Comments.Where(c => c.ParentCommentId == null).ToList())
+}
+else
+{
+    <p>No comments yet. Be the first to comment!</p>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            // Hide all reply form containers on page load
+            $('.reply-form-container').hide();
+
+            // Toggle reply form visibility
+            $(document).on('click', '.reply-button', function () {
+                var target = $(this).data('target');
+                $('#' + target).toggle(); // Toggle the reply form container visibility
+            });
+
+            // Cancel button functionality
+            $(document).on('click', '.cancel-button', function () {
+                var target = $(this).data('target');
+                $('#' + target).hide(); // Hide the reply form container
+            });
+        });
+    </script>
+}

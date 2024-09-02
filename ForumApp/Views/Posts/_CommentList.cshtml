@@ -1,0 +1,38 @@
+﻿﻿
+@model IEnumerable<ForumApp.Models.Comment>
+
+@foreach (var comment in Model)
+{
+    <div @if (comment.ParentCommentId.HasValue) { @: style="margin-left: 50px;"
+         } else { @: style="margin-left: 0px;"
+         }>
+        <p>@comment.Content</p>
+        <p><small>Posted on @comment.DateCreated by @comment.UserId</small></p>
+        <button type="button" class="btn btn-sm btn-secondary reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
+        <div id="replyForm-@comment.CommentId" class="reply-form-container">
+            @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "reply-form", data_comment_id = comment.CommentId }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Hidden("PostId", comment.PostId)
+                @Html.Hidden("ParentCommentId", comment.CommentId)
+
+                <div class="form-group">
+                    @Html.Label("Content", "Reply")
+                    @Html.TextArea("Content", null, new { @class = "form-control", rows = 2, placeholder = "Write your reply here..." })
+                    @Html.ValidationMessage("Content", "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Post Reply" class="btn btn-sm btn-primary" />
+                    <button type="button" class="btn btn-sm btn-secondary cancel-button" data-target="replyForm-@comment.CommentId">Cancel</button>
+                </div>
+            }
+        </div>
+
+        @if (comment.Replies.Any())
+        {
+            @Html.Partial("_CommentList", comment.Replies)
+        }
+       
+    </div>
+}
