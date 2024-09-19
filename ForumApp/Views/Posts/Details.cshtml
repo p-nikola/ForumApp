@@ -7,6 +7,15 @@
 <p>@Model.Content</p>
 <p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px" /></p>
 
+<div>
+    <button class="btn btn-success" onclick="upvotePost(@Model.PostId)">Upvote</button>
+    <span>Upvotes: <span id="post-upvotes">@Model.Upvotes</span></span>
+    <button class="btn btn-danger" onclick="downvotePost(@Model.PostId)">Downvote</button>
+    <span>Downvotes: <span id="post-downvotes">@Model.Downvotes</span></span>
+</div>
+
+
+
 <h3>Comments</h3>
 
 <h4>Leave a Comment</h4>
@@ -49,7 +58,7 @@ else
                 console.log("Highlighting comment:", commentId);
                 $('#' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
             }
-            
+
 
             // Hide all reply form containers on page
             $('.reply-form-container').hide();
@@ -66,5 +75,25 @@ else
                 $('#' + target).hide(); // Hide the reply form container
             });
         });
+
+         function upvotePost(postId) {
+            $.post('@Url.Action("UpvotePost", "Posts")', { postId: postId }, function (data) {
+                if (data.success) {
+                    $('#post-upvotes').text(data.upvotes); // Update the upvotes count
+                }
+            });
+        }
+
+        function downvotePost(postId) {
+            $.post('@Url.Action("DownvotePost", "Posts")', { postId: postId }, function (data) {
+                if (data.success) {
+                    $('#post-downvotes').text(data.downvotes); // Update the downvotes count
+                }
+            });
+        }
+
+
+
+
     </script>
 }

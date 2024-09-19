@@ -33,6 +33,9 @@ namespace ForumApp.Models
 
         public virtual ApplicationUser User { get; set; }
 
+        public int Upvotes { get; set; }
+        public int Downvotes { get; set; }
+
 
         public Comment()
         {

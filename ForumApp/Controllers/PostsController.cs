@@ -53,5 +53,32 @@ namespace ForumApp.Controllers
             }
             return View(post);
         }
+
+        [HttpPost]
+        public ActionResult UpvotePost(int postId)
+        {
+            var post = db.Posts.Find(postId);
+            if (post != null)
+            {
+                post.Upvotes++;
+                db.SaveChanges();
+                return Json(new { success = true, upvotes = post.Upvotes });
+            }
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public ActionResult DownvotePost(int postId)
+        {
+            var post = db.Posts.Find(postId);
+            if (post != null)
+            {
+                post.Downvotes++;
+                db.SaveChanges();
+                return Json(new { success = true, downvotes = post.Downvotes });
+            }
+            return Json(new { success = false });
+        }
+
     }
 }

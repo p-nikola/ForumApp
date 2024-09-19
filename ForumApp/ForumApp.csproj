@@ -198,6 +198,14 @@
     <Compile Include="Migrations\202409061948494_added_posts_comments_info_for_user.Designer.cs">
       <DependentUpon>202409061948494_added_posts_comments_info_for_user.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409191821597_added_upvotes_downvotes.cs" />
+    <Compile Include="Migrations\202409191821597_added_upvotes_downvotes.Designer.cs">
+      <DependentUpon>202409191821597_added_upvotes_downvotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409192056401_added_upvotes_downvotes_for_user.cs" />
+    <Compile Include="Migrations\202409192056401_added_upvotes_downvotes_for_user.Designer.cs">
+      <DependentUpon>202409192056401_added_upvotes_downvotes_for_user.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -398,6 +406,7 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\comments.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -576,6 +585,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409061948494_added_posts_comments_info_for_user.resx">
       <DependentUpon>202409061948494_added_posts_comments_info_for_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409191821597_added_upvotes_downvotes.resx">
+      <DependentUpon>202409191821597_added_upvotes_downvotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409192056401_added_upvotes_downvotes_for_user.resx">
+      <DependentUpon>202409192056401_added_upvotes_downvotes_for_user.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

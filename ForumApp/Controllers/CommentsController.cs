@@ -50,5 +50,32 @@ namespace ForumApp.Controllers
                 return RedirectToAction("Details", "Posts", new { id = viewModel.PostId });
             }
         }
+
+
+        [HttpPost]
+        public ActionResult UpvoteComment(int commentId)
+        {
+            var comment = db.Comments.Find(commentId);
+            if (comment != null)
+            {
+                comment.Upvotes++;
+                db.SaveChanges();
+                return Json(new { success = true, upvotes = comment.Upvotes });
+            }
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public ActionResult DownvoteComment(int commentId)
+        {
+            var comment = db.Comments.Find(commentId);
+            if (comment != null)
+            {
+                comment.Downvotes++;
+                db.SaveChanges();
+                return Json(new { success = true, downvotes = comment.Downvotes });
+            }
+            return Json(new { success = false });
+        }
     }
 }

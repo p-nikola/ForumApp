@@ -3,14 +3,16 @@
 <h2>@Model.UserName's Profile</h2>
 <p>Email: @Model.Email</p>
 <p>Date Joined: @Model.DateJoined</p>
-<img src="@Model.ProfilePictureUrl" alt="Profile Picture" style="width:150px" />
+<img src="@Model.ProfilePictureUrl" alt="Profile Picture" style="width:150px;" />
 <br />
 
+<h3>User Stats</h3>
+<p>Total Upvotes: @Model.TotalUpvotes</p>
+<p>Total Downvotes: @Model.TotalDownvotes</p>
+
+<br />
 <a href="@Url.Action("Edit")">Edit Profile</a>
-
 <br />
 <br />
-
-<!-- ActionLinks for Posts and Comments -->
 @Html.ActionLink("View All Posts", "UserPosts", "Profile", new { id = Model.Id }, new { @class = "btn btn-primary" })
-@Html.ActionLink("View All Comments", "UserComments", "Profile", new { id = Model.Id }, new { @class = "btn btn-primary" })
+@Html.ActionLink("View All Comments", "UserComments", "Profile", new { id = Model.Id }, new { @class = "btn btn-secondary" })

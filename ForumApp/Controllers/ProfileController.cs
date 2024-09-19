@@ -20,12 +20,26 @@ namespace ForumApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var user = db.Users.FirstOrDefault(u => u.Id == id);
+            var user = db.Users.Include(u => u.Posts)
+                       .Include(u => u.Comments)
+                       .FirstOrDefault(u => u.Id == id);
 
             if (user == null)
             {
                 return HttpNotFound();
             }
+
+            // Calculate total upvotes and downvotes from posts
+            var totalPostUpvotes = user.Posts.Sum(p => p.Upvotes);
+            var totalPostDownvotes = user.Posts.Sum(p => p.Downvotes);
+
+            // Calculate total upvotes and downvotes from comments
+            var totalCommentUpvotes = user.Comments.Sum(c => c.Upvotes);
+            var totalCommentDownvotes = user.Comments.Sum(c => c.Downvotes);
+
+            // Total upvotes and downvotes
+            user.TotalUpvotes = totalPostUpvotes + totalCommentUpvotes;
+            user.TotalDownvotes = totalPostDownvotes + totalCommentDownvotes;
 
             return View(user);
         }

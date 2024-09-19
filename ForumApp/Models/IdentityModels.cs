@@ -19,6 +19,10 @@ namespace ForumApp.Models
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
 
+        // Dynamically calculated properties
+        public int TotalUpvotes { get; set; } // This will be calculated
+        public int TotalDownvotes { get; set; } // This will be calculated
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

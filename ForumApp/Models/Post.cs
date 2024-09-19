@@ -29,6 +29,9 @@ namespace ForumApp.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ApplicationUser User { get; set; }
 
+        public int Upvotes { get; set; }
+        public int Downvotes { get; set; }
+
 
         public Post()
         {
