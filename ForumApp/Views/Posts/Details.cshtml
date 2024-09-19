@@ -38,7 +38,10 @@
 @if (Model.Comments.Any())
 {
     @* Display top-level comments *@
-    @Html.Partial("_CommentList", Model.Comments.Where(c => c.ParentCommentId == null).ToList())
+    <div id="comments-section">
+        @Html.Partial("_CommentList", Model.Comments.Where(c => c.ParentCommentId == null).ToList())
+    </div>
+
 }
 else
 {
@@ -91,7 +94,6 @@ else
                 }
             });
         }
-
 
 
 

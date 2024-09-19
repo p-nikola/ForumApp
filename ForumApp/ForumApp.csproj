@@ -538,6 +538,7 @@
     <Content Include="Views\Forums\_ForumListPartial.cshtml" />
     <Content Include="Views\Profile\UserPosts.cshtml" />
     <Content Include="Views\Profile\UserComments.cshtml" />
+    <Content Include="Views\Posts\_ReplyForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

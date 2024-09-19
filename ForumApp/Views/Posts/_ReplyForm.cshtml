@@ -1,0 +1,19 @@
+﻿@model ForumApp.Models.CommentViewModel
+
+@using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "reply-form", id = "replyForm"}))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.PostId)
+    @Html.HiddenFor(m => m.ParentCommentId)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Content, "Reply")
+        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 2, placeholder = "Write your reply here..." })
+        @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Post Reply" class="btn btn-sm btn-primary" />
+        <button type="button" class="btn btn-sm btn-secondary cancel-button" data-target="replyForm-@Model.ParentCommentId">Cancel</button>
+    </div>
+}

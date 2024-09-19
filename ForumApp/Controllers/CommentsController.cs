@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -42,13 +43,27 @@ namespace ForumApp.Controllers
                 db.Comments.Add(comment);
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Posts", new { id = viewModel.PostId });
-            }
-            else
-            {
+                if (Request.IsAjaxRequest())
+                {
+                    var comments = db.Comments
+                                     .Where(c => c.PostId == viewModel.PostId && c.ParentCommentId == null)
+                                     .Include(c => c.Replies)
+                                     .Include(c => c.User)
+                                     .ToList();
+
+                    return PartialView("_CommentList", comments); // Update this with your partial view for rendering comments
+                }
+
 
                 return RedirectToAction("Details", "Posts", new { id = viewModel.PostId });
             }
+            // If model state is invalid, return the form again (with validation messages)
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_ReplyForm", viewModel);
+            }
+
+            return View(viewModel);
         }
 
 
