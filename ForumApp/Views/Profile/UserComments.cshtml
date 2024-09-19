@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ForumApp.Models.Comment>
+
+<h2>@ViewBag.Username's Comments</h2>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var comment in Model)
+        {
+            <li>
+                <a href="@Url.Action("Details", "Posts", new { id = comment.Post.PostId })#comment-@comment.CommentId">@comment.Content</a>
+                - @comment.DateCreated in forum:
+                @Html.ActionLink(comment.Post.Forum.Title, "Details", "Forums", new { id = comment.Post.Forum.ForumId }, null)
+                - @comment.DateCreated
+                <!-- Link to the specific comment within the post -->
+
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>This user has not made any comments yet.</p>
+}

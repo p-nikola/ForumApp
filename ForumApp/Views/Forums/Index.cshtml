@@ -1,17 +1,40 @@
-﻿﻿@model IEnumerable<ForumApp.Models.Forum>
+﻿@model IEnumerable<ForumApp.Models.Forum>
 
 @{
     ViewBag.Title = "Index";
 }
+<link rel="stylesheet" type="text/css" href="~/Content/Forum/ForumDetails.css" />
 
 <h2>Forums</h2>
 
-@foreach (var forum in Model)
-{
-    <div>
-        <h3>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</h3>
-        <p>@forum.Description</p>
-    </div>
-}
+<!-- Table layout for forums -->
+<table id="forumsTable" class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m=>m.Title)</th>
+            <th>@Html.DisplayNameFor(m => m.Description)</th>
+            <th>Posts</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forum in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</td>
+                <td>@Html.DisplayFor(m => forum.Description)</td>
+                <td>@forum.Posts.Count()</td>   
+            </tr>
+        }
+    </tbody>
+</table>
 
 @Html.ActionLink("Create New Forum", "Create")
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTables
+            $('#forumsTable').DataTable()
+        });
+    </script>
+}

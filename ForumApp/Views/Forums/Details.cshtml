@@ -1,4 +1,6 @@
-﻿﻿@model ForumApp.Models.Forum
+﻿@model ForumApp.Models.Forum
+
+<link rel="stylesheet" type="text/css" href="~/Content/Forum/ForumDetails.css" />
 
 <h2>@Model.Title</h2>
 <p>@Model.Description</p>
@@ -7,15 +9,36 @@
 
 @if (Model.Posts.Any())
 {
-    foreach (var post in Model.Posts)
-    {
-        <div>
-            <h4>@Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId }, new { @class = "btn btn-primary" })</h4>
-            <p>@post.Content</p>
-            <p><small>Posted on @post.DateCreated by @post.UserId</small></p>
-            <hr />
-        </div>
-    }
+    <table id="postsTable" class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m=>m.Title)</th>
+                <th>Content</th>
+                <th>Date Created</th>
+                <th>Comments</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId },null)
+                    </td>
+                    <td>@post.Content</td>
+                    <td>@post.DateCreated</td>
+                    <td>@post.Comments.Count</td>
+                    <td>
+                        @Html.ActionLink(post.User.UserName, "Index", "Profile", new { id = post.UserId }, new { @class = "username-link" })
+                        <img src="@post.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:50px; height:50px;" />
+                    </td>
+                    
+
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 else
 {
@@ -29,3 +52,9 @@ else
 <div>
     @Html.ActionLink("Back to Forum List", "Index")
 </div>
+
+@section Scripts {
+    <script>$(document).ready(function () {
+            $('#postsTable').DataTable();
+        });</script>
+}

@@ -1,8 +1,11 @@
 ﻿﻿@model ForumApp.Models.Post
 
+<link rel="stylesheet" type="text/css" href="~/Content/Posts/PostsStyle.css" />
+
+
 <h2>@Model.Title</h2>
 <p>@Model.Content</p>
-<p>Posted on @Model.DateCreated by @Model.UserId</p>
+<p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px" /></p>
 
 <h3>Comments</h3>
 
@@ -41,7 +44,14 @@ else
 
     <script>
         $(document).ready(function () {
-            // Hide all reply form containers on page load
+            var commentId = window.location.hash.substring(1); // Get the comment ID from the URL fragment
+            if (commentId) {
+                console.log("Highlighting comment:", commentId);
+                $('#' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
+            }
+            
+
+            // Hide all reply form containers on page
             $('.reply-form-container').hide();
 
             // Toggle reply form visibility

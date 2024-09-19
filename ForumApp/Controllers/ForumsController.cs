@@ -47,5 +47,8 @@ namespace ForumApp.Controllers
             }
             return View(forum);
         }
+
+
+
     }
 }

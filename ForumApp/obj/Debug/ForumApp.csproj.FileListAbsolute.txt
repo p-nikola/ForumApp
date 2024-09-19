@@ -108,3 +108,7 @@ C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\De
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.pdb
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.initial.resources
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.csproj.GenerateResource.cache
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddUserProfileFields.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.updated_post_comment_model.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.RemoveDisplayNameFromApplicationUserAndAddDateJoined.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.added_posts_comments_info_for_user.resources

@@ -31,6 +31,9 @@ namespace ForumApp.Models
         // Collection to hold the replies to this comment
         public virtual ICollection<Comment> Replies { get; set; }
 
+        public virtual ApplicationUser User { get; set; }
+
+
         public Comment()
         {
             Replies = new HashSet<Comment>();

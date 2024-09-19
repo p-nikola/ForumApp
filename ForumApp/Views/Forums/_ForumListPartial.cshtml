@@ -1,0 +1,9 @@
+﻿@model IEnumerable<ForumApp.Models.Forum>
+
+@foreach (var forum in Model)
+{
+    <div>
+        <h3>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</h3>
+        <p>@forum.Description</p>
+    </div>
+}

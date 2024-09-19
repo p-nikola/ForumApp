@@ -1,0 +1,37 @@
+﻿@model ForumApp.Models.ApplicationUser
+
+<h2>Edit Profile</h2>
+
+@using (Html.BeginForm("Edit", "Profile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m=>m.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName)
+        @Model.UserName
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Email")
+        <p>@Model.Email</p>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Date Joined")
+        <p>@Model.DateJoined</p>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ProfilePictureUrl, "Profile Picture URL")
+        @Html.TextBoxFor(m => m.ProfilePictureUrl, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="form-group">
+        <img src="@Model.ProfilePictureUrl" alt="Profile Picture" style="max-width: 150px;" />
+    </div>
+    <br />
+
+    <input type="submit" value="Save Changes" class="btn btn-primary" />
+}

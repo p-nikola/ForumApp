@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ForumApp.Models.Post>
+
+<h2>@ViewBag.UserName's Posts</h2>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var post in Model)
+        {
+            <li>
+                @Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId }, null) - @post.DateCreated
+                in forum:
+                @Html.ActionLink(post.Forum.Title, "Details", "Forums", new { id = post.Forum.ForumId }, null)
+                - @post.DateCreated
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>This user has not made any posts yet.</p>
+}

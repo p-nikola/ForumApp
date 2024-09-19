@@ -1,15 +1,23 @@
 ﻿﻿
 @model IEnumerable<ForumApp.Models.Comment>
 
+
+<link rel="stylesheet" type="text/css" href="~/Content/Posts/PostsStyle.css" />
+
+
 @foreach (var comment in Model)
 {
     <div @if (comment.ParentCommentId.HasValue) { @: style="margin-left: 50px;"
          } else { @: style="margin-left: 0px;"
          }>
-        <p>@comment.Content</p>
-        <p><small>Posted on @comment.DateCreated by @comment.UserId</small></p>
-        <button type="button" class="btn btn-sm btn-secondary reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
+        <div id="comment-@comment.CommentId">
+            <p>@comment.Content</p>
+
+            <p><small>Posted on @comment.DateCreated by @Html.ActionLink(comment.User.UserName, "Index", "Profile", new { id = comment.UserId }, new { @class = "username-link" }) <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px;" /></small></p>
+            <button type="button" class="btn btn-sm btn-secondary reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
+        </div>
         <div id="replyForm-@comment.CommentId" class="reply-form-container">
+        
             @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "reply-form", data_comment_id = comment.CommentId }))
             {
                 @Html.AntiForgeryToken()
@@ -33,6 +41,20 @@
         {
             @Html.Partial("_CommentList", comment.Replies)
         }
-       
+
     </div>
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+
+        }
+
+    </script>
+
 }
