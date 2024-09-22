@@ -36,6 +36,8 @@ namespace ForumApp.Models
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
 
+        public bool IsSoftDeleted { get; set; } = false;
+
 
         public Comment()
         {

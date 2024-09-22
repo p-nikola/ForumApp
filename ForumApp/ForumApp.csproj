@@ -206,6 +206,18 @@
     <Compile Include="Migrations\202409192056401_added_upvotes_downvotes_for_user.Designer.cs">
       <DependentUpon>202409192056401_added_upvotes_downvotes_for_user.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409211719487_AddCascadeDeleteForComments.cs" />
+    <Compile Include="Migrations\202409211719487_AddCascadeDeleteForComments.Designer.cs">
+      <DependentUpon>202409211719487_AddCascadeDeleteForComments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409211736493_RemoveCascadeDeleteForComments.cs" />
+    <Compile Include="Migrations\202409211736493_RemoveCascadeDeleteForComments.Designer.cs">
+      <DependentUpon>202409211736493_RemoveCascadeDeleteForComments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409221901130_AddSoftDeleteToComments.cs" />
+    <Compile Include="Migrations\202409221901130_AddSoftDeleteToComments.Designer.cs">
+      <DependentUpon>202409221901130_AddSoftDeleteToComments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -532,17 +544,16 @@
     <Content Include="Views\Forums\Index.cshtml" />
     <Content Include="Views\Posts\Create.cshtml" />
     <Content Include="Views\Posts\Details.cshtml" />
-    <Content Include="Views\Posts\_CommentList.cshtml" />
+    <Content Include="Views\Comments\_CommentList.cshtml" />
     <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Profile\Edit.cshtml" />
     <Content Include="Views\Forums\_ForumListPartial.cshtml" />
     <Content Include="Views\Profile\UserPosts.cshtml" />
     <Content Include="Views\Profile\UserComments.cshtml" />
-    <Content Include="Views\Posts\_ReplyForm.cshtml" />
+    <Content Include="Views\Comments\_ReplyForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Comments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -592,6 +603,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409192056401_added_upvotes_downvotes_for_user.resx">
       <DependentUpon>202409192056401_added_upvotes_downvotes_for_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409211719487_AddCascadeDeleteForComments.resx">
+      <DependentUpon>202409211719487_AddCascadeDeleteForComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409211736493_RemoveCascadeDeleteForComments.resx">
+      <DependentUpon>202409211736493_RemoveCascadeDeleteForComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409221901130_AddSoftDeleteToComments.resx">
+      <DependentUpon>202409221901130_AddSoftDeleteToComments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

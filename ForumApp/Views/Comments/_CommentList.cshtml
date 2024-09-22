@@ -2,12 +2,13 @@
 
 <link rel="stylesheet" type="text/css" href="~/Content/Posts/PostsStyle.css" />
 
-@foreach (var comment in Model)
+@foreach (var comment in Model.OrderBy(c=>c.DateCreated))
 {
-    <div @if (comment.ParentCommentId.HasValue) { @: style="margin-left: 50px;"
+    <div id="comment-wrapper-@comment.CommentId" @if (comment.ParentCommentId.HasValue) { @: style="margin-left: 50px;"
          } else { @: style="margin-left: 0px;"
          }>
         <div id="comment-@comment.CommentId">
+
             <p>@comment.Content</p>
 
             <p>
@@ -20,6 +21,7 @@
             <div>
                 <button type="button" class="btn btn-sm btn-success" onclick="upvoteComment(@comment.CommentId)">Upvote</button>
                 <button type="button" class="btn btn-sm btn-danger" onclick="downvoteComment(@comment.CommentId)">Downvote</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteComment(@comment.CommentId)">Delete</button>
                 <span>Upvotes: <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
                 <span>Downvotes: <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
             </div>
@@ -29,13 +31,13 @@
 
         <!-- Reply form using a partial view -->
         <div id="replyForm-@comment.CommentId" class="reply-form-container">
-            @Html.Partial("_ReplyForm", new ForumApp.Models.CommentViewModel { PostId = comment.PostId, ParentCommentId = comment.CommentId })
+            @Html.Partial("~/Views/Comments/_ReplyForm.cshtml", new ForumApp.Models.CommentViewModel { PostId = comment.PostId, ParentCommentId = comment.CommentId })
         </div>
 
         <!-- Recursively display child comments -->
         @if (comment.Replies.Any())
         {
-            @Html.Partial("_CommentList", comment.Replies)
+            @Html.Partial("~/Views/Comments/_CommentList.cshtml", comment.Replies.OrderBy(r => r.DateCreated))
         }
     </div>
 }

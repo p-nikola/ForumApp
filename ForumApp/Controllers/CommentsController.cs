@@ -43,21 +43,29 @@ namespace ForumApp.Controllers
                 db.Comments.Add(comment);
                 db.SaveChanges();
 
+                // Pass an empty view model to prevent form from being filled with previous data
+                var emptyViewModel = new CommentViewModel { PostId = viewModel.PostId };
+
                 if (Request.IsAjaxRequest())
                 {
+                    // Fetch updated comments list
                     var comments = db.Comments
                                      .Where(c => c.PostId == viewModel.PostId && c.ParentCommentId == null)
-                                     .Include(c => c.Replies)
+                                     .Include(c => c.Replies.Select(r => r.User))
                                      .Include(c => c.User)
                                      .ToList();
 
-                    return PartialView("_CommentList", comments); // Update this with your partial view for rendering comments
-                }
+                   
 
+                    // Return the updated comments section with a fresh view model
+                    return PartialView("_CommentList", comments);
+                }
 
                 return RedirectToAction("Details", "Posts", new { id = viewModel.PostId });
             }
-            // If model state is invalid, return the form again (with validation messages)
+
+
+            // Handle validation errors
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_ReplyForm", viewModel);
@@ -65,6 +73,8 @@ namespace ForumApp.Controllers
 
             return View(viewModel);
         }
+
+
 
 
         [HttpPost]
@@ -92,5 +102,33 @@ namespace ForumApp.Controllers
             }
             return Json(new { success = false });
         }
+
+
+        [HttpPost]
+        public ActionResult DeleteComment(int commentId)
+        {
+            var comment = db.Comments.Include(c => c.Replies).FirstOrDefault(c => c.CommentId == commentId);
+            if (comment != null)
+            {
+                DeleteNestedComments(comment);
+                db.Comments.Remove(comment);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, error = "Comment not found" });
+        }
+
+        private void DeleteNestedComments(Comment parentComment)
+        {
+            // Recursively delete all nested comments (replies)
+            foreach (var reply in parentComment.Replies.ToList())  // Use .ToList() to avoid modification during iteration
+            {
+                DeleteNestedComments(reply);
+                db.Comments.Remove(reply);
+            }
+        }
+
+
+
     }
 }

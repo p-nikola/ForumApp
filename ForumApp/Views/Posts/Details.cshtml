@@ -37,16 +37,17 @@
 
 @if (Model.Comments.Any())
 {
-    @* Display top-level comments *@
     <div id="comments-section">
-        @Html.Partial("_CommentList", Model.Comments.Where(c => c.ParentCommentId == null).ToList())
+        @Html.Partial("~/Views/Comments/_CommentList.cshtml", Model.Comments.Where(c => c.ParentCommentId == null).ToList())
     </div>
-
 }
 else
 {
-    <p>No comments yet. Be the first to comment!</p>
+    <div id="comments-section">
+        <p>No comments yet. Be the first to comment!</p>
+    </div>
 }
+
 
 
 
@@ -54,48 +55,160 @@ else
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
-        $(document).ready(function () {
-            var commentId = window.location.hash.substring(1); // Get the comment ID from the URL fragment
-            if (commentId) {
-                console.log("Highlighting comment:", commentId);
-                $('#' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
-            }
+<script>
+    $(document).ready(function () {
+        // Hide all reply forms on page load
+        hideReplyForms();
+    });
 
 
-            // Hide all reply form containers on page
-            $('.reply-form-container').hide();
-
-            // Toggle reply form visibility
-            $(document).on('click', '.reply-button', function () {
-                var target = $(this).data('target');
-                $('#' + target).toggle(); // Toggle the reply form container visibility
+    function deleteComment(commentId) {
+        if (confirm('Are you sure you want to delete this comment and all its replies?')) {
+            $.post('@Url.Action("DeleteComment", "Comments")', { commentId: commentId }, function (data) {
+                if (data.success) {
+                    console.log("Deleting comment " + commentId);
+                    removeCommentAndReplies(commentId);  // Call to remove comments from the DOM
+                } else {
+                    alert('Failed to delete comment: ' + data.error);
+                }
+            }).fail(function (xhr, status, error) {
+                // Handle error
+                alert('An error occurred while deleting the comment: ' + error);
             });
+        }
+    }
 
-            // Cancel button functionality
-            $(document).on('click', '.cancel-button', function () {
-                var target = $(this).data('target');
-                $('#' + target).hide(); // Hide the reply form container
-            });
+
+    function removeCommentAndReplies(commentId) {
+        var commentWrapper = $('#comment-wrapper-' + commentId);
+
+        // First, remove all nested replies within this comment
+        commentWrapper.find('div[id^="comment-wrapper-"]').each(function () {
+            var nestedCommentId = $(this).attr('id').split('-')[2];
+            console.log("Removing nested comment: " + nestedCommentId);
+            $(this).remove();
         });
 
-         function upvotePost(postId) {
-            $.post('@Url.Action("UpvotePost", "Posts")', { postId: postId }, function (data) {
-                if (data.success) {
-                    $('#post-upvotes').text(data.upvotes); // Update the upvotes count
-                }
-            });
+        // Now remove the parent comment itself
+        console.log("Removing parent comment: " + commentId);
+        commentWrapper.remove();
+
+        // Check if there are no more comments left and update the UI accordingly
+        if ($('#comments-section').find('div[id^="comment-wrapper-"]').length === 0) {
+            $('#comments-section').html('<p>No comments yet. Be the first to comment!</p>');
         }
-
-        function downvotePost(postId) {
-            $.post('@Url.Action("DownvotePost", "Posts")', { postId: postId }, function (data) {
-                if (data.success) {
-                    $('#post-downvotes').text(data.downvotes); // Update the downvotes count
-                }
-            });
-        }
+    }
 
 
 
-    </script>
+
+    // Function to hide all reply forms and set up event handlers for reply buttons and cancel buttons
+    function hideReplyForms() {
+        // Hide all reply forms on the page
+        $('.reply-form-container').hide();
+
+        // Clear the content of all reply forms
+        $('.reply-form-container').find('textarea').val('');
+    }
+
+
+    // Handle reply form submission via AJAX
+    $(document).on('submit', '.reply-form', function (e) {
+        e.preventDefault(); // Prevent default form submission
+        var form = $(this);
+        var formData = form.serialize();
+
+        console.log(formData); // Log the serialized form data to check if ParentCommentId is correctly passed
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,
+            success: function (result) {
+                // Update the comments section with the returned partial view
+                $('#comments-section').html(result);
+
+                // Clear the comment form
+                form.find('textarea').val('');
+                form[0].reset();
+
+
+                // Reinitialize the reply forms and event handlers after the DOM is updated
+                hideReplyForms();
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                alert('An error occurred while submitting the reply: ' + error);
+            }
+        });
+    });
+
+
+    // Toggle reply form visibility on reply button click
+    $(document).on('click', '.reply-button', function () {
+        var target = $(this).data('target');
+
+        var parentCommentId = target.split('-')[1]; // Extract ParentCommentId from target (assumes target is in format "replyForm-{CommentId}")
+
+        console.log("ParentCommentId: " + parentCommentId); // Log the ParentCommentId to the console
+
+        // Update the hidden ParentCommentId field in the reply form
+        $('#' + target).find('input[name="ParentCommentId"]').val(parentCommentId);
+
+
+        $('#' + target).toggle(); // Toggle the reply form container visibility
+    });
+
+    // Hide reply form on cancel button click
+    $(document).on('click', '.cancel-button', function () {
+        var target = $(this).data('target');
+        $('#' + target).hide(); // Hide the reply form container
+    });
+
+    // Handle comment form submission via AJAX
+    $(document).on('submit', '#postCommentForm', function (e) {
+        e.preventDefault(); // Prevent default form submission
+        var form = $(this);
+        var formData = form.serialize();
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,
+            success: function (result) {
+                // Update the comments section with the returned partial view
+                $('#comments-section').html(result);
+
+                // Clear the comment form
+                form.find('textarea').val('');
+                form[0].reset();
+
+                // Reinitialize the reply forms and event handlers after the DOM is updated
+                hideReplyForms();
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                alert('An error occurred while submitting the comment: ' + error);
+            }
+        });
+    });
+
+    // Function for upvote and downvote post
+    function upvotePost(postId) {
+        $.post('@Url.Action("UpvotePost", "Posts")', { postId: postId }, function (data) {
+            if (data.success) {
+                $('#post-upvotes').text(data.upvotes); // Update the upvotes count
+            }
+        });
+    }
+
+    function downvotePost(postId) {
+        $.post('@Url.Action("DownvotePost", "Posts")', { postId: postId }, function (data) {
+            if (data.success) {
+                $('#post-downvotes').text(data.downvotes); // Update the downvotes count
+            }
+        });
+    }
+
+
+
+</script>
 }

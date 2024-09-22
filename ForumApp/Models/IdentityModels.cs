@@ -47,5 +47,7 @@ namespace ForumApp.Models
         {
             return new ApplicationDbContext();
         }
+
+
     }
 }
