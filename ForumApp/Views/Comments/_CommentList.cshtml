@@ -1,33 +1,57 @@
 ﻿@model IEnumerable<ForumApp.Models.Comment>
+@using Microsoft.AspNet.Identity
+
 
 <link rel="stylesheet" type="text/css" href="~/Content/Posts/PostsStyle.css" />
 
-@foreach (var comment in Model.OrderBy(c=>c.DateCreated))
+@foreach (var comment in Model.OrderBy(c => c.DateCreated))
 {
     <div id="comment-wrapper-@comment.CommentId" @if (comment.ParentCommentId.HasValue) { @: style="margin-left: 50px;"
          } else { @: style="margin-left: 0px;"
          }>
+        <p>
+            @if (comment.IsSoftDeleted)
+            {
+
+
+                <em>User deleted this comment</em>
+            }
+            else
+            {
+
         <div id="comment-@comment.CommentId">
 
             <p>@comment.Content</p>
 
-            <p>
-                <small>
-                    Posted on @comment.DateCreated by @Html.ActionLink(comment.User.UserName, "Index", "Profile", new { id = comment.UserId }, new { @class = "username-link" })
-                    <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px;" />
-                </small>
-            </p>
+            <div id="comment-buttons-@comment.CommentId">
 
-            <div>
-                <button type="button" class="btn btn-sm btn-success" onclick="upvoteComment(@comment.CommentId)">Upvote</button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="downvoteComment(@comment.CommentId)">Downvote</button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="deleteComment(@comment.CommentId)">Delete</button>
-                <span>Upvotes: <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
-                <span>Downvotes: <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
+                <p>
+                    <small>
+                        Posted on @comment.DateCreated by @Html.ActionLink(comment.User.UserName, "Index", "Profile", new { id = comment.UserId }, new { @class = "username-link" })
+                        <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px;" />
+                    </small>
+                </p>
+
+                <div>
+                    <button type="button" class="btn btn-sm btn-success" onclick="upvoteComment(@comment.CommentId)">Upvote</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="downvoteComment(@comment.CommentId)">Downvote</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteComment(@comment.CommentId)">Delete</button>
+                    @if (comment.UserId == User.Identity.GetUserId())
+                    {
+                        <button type="button" class="btn btn-sm btn-warning" onclick="softDeleteComment(@comment.CommentId)">Delete Comment</button>
+                    }
+
+                    <span>Upvotes: <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
+                    <span>Downvotes: <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
+                    <br />
+                    <br />
+                    <button type="button" class="btn btn-sm btn-secondary reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
+                </div>
             </div>
             <br />
-            <button type="button" class="btn btn-sm btn-secondary reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
         </div>
+            }
+        </p>
 
         <!-- Reply form using a partial view -->
         <div id="replyForm-@comment.CommentId" class="reply-form-container">

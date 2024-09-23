@@ -129,6 +129,21 @@ namespace ForumApp.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult SoftDeleteComment(int commentId)
+        {
+            var comment = db.Comments.Find(commentId);
+            if (comment != null && comment.UserId == User.Identity.GetUserId()) // Ensure the user is only deleting their own comments
+            {
+                comment.IsSoftDeleted = true;
+                db.SaveChanges();
+                return Json(new { success = true, message = "Comment successfully deleted." });
+            }
+            return Json(new { success = false, message = "Comment not found or unauthorized action." });
+        }
+
+
+
 
     }
 }

@@ -80,5 +80,15 @@ namespace ForumApp.Controllers
             return Json(new { success = false });
         }
 
+        public ActionResult DeletePost(int id)
+        {
+            Post post = db.Posts.Find(id);
+            db.Posts.Remove(post);
+            db.SaveChanges();
+            return RedirectToAction("Details", "Forums", new { id = post.ForumId });
+        }       
+
+
+
     }
 }

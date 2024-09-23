@@ -14,6 +14,7 @@
             <th>@Html.DisplayNameFor(m=>m.Title)</th>
             <th>@Html.DisplayNameFor(m => m.Description)</th>
             <th>Posts</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +23,10 @@
             <tr>
                 <td>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</td>
                 <td>@Html.DisplayFor(m => forum.Description)</td>
-                <td>@forum.Posts.Count()</td>   
+                <td>@forum.Posts.Count()</td>
+                <td>
+                <button data-forum-id="@forum.ForumId" class="btn btn-danger js-delete">Delete Forum</button>
+                </td>
             </tr>
         }
     </tbody>
@@ -34,7 +38,32 @@
     <script>
         $(document).ready(function () {
             // Initialize DataTables
-            $('#forumsTable').DataTable()
+            var table = $('#forumsTable').DataTable()
+
+            $("#forumsTable .js-delete").on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to delete this forum?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/Forums/DeleteForum/" + button.attr("data-forum-id"),
+                            method: "GET",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+                });
+
+
+
+            })
+
+
+
+
         });
     </script>
 }

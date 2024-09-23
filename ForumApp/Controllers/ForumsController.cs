@@ -49,6 +49,16 @@ namespace ForumApp.Controllers
         }
 
 
+        public ActionResult DeleteForum(int id)
+        {
+            Forum forum = db.Forums.Find(id);
+            db.Forums.Remove(forum);
+            db.SaveChanges();
+            return RedirectToAction("Index");   
+        }
+
+
+
 
     }
 }
