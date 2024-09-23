@@ -553,6 +553,7 @@
     <Content Include="Views\Profile\UserPosts.cshtml" />
     <Content Include="Views\Profile\UserComments.cshtml" />
     <Content Include="Views\Comments\_ReplyForm.cshtml" />
+    <Content Include="Views\Account\AddUserToRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

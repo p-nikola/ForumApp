@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ForumApp.Models;
+using System.Collections.Generic;
 
 namespace ForumApp.Controllers
 {
@@ -183,6 +184,32 @@ namespace ForumApp.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        public ActionResult AddUserToRole()
+        {
+            AddRoleModel model = new AddRoleModel();
+            model.Roles = new List<string>() { "Admin", "Moderator", "User" };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddUserToRole(AddRoleModel model)
+        {
+            var email=model.Email;
+            var user=UserManager.FindByEmail(email);
+
+            if (user == null)
+            {
+                throw new HttpException(404, "User not found");
+            }
+
+            UserManager.AddToRole(user.Id, model.SelectedRole);
+
+            return RedirectToAction("Index", "Forums");
+
+        }
+
 
         //
         // GET: /Account/ConfirmEmail
