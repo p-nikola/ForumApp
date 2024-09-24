@@ -32,6 +32,8 @@ namespace ForumApp.Models
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
 
+        public bool IsApproved { get; set; } = false;
+
 
         public Post()
         {

@@ -218,6 +218,10 @@
     <Compile Include="Migrations\202409221901130_AddSoftDeleteToComments.Designer.cs">
       <DependentUpon>202409221901130_AddSoftDeleteToComments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409232318078_AddIsApprovedToPosts.cs" />
+    <Compile Include="Migrations\202409232318078_AddIsApprovedToPosts.Designer.cs">
+      <DependentUpon>202409232318078_AddIsApprovedToPosts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -554,6 +558,8 @@
     <Content Include="Views\Profile\UserComments.cshtml" />
     <Content Include="Views\Comments\_ReplyForm.cshtml" />
     <Content Include="Views\Account\AddUserToRole.cshtml" />
+    <Content Include="Views\Posts\PostPendingApproval.cshtml" />
+    <Content Include="Views\Posts\PendingApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -615,6 +621,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409221901130_AddSoftDeleteToComments.resx">
       <DependentUpon>202409221901130_AddSoftDeleteToComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409232318078_AddIsApprovedToPosts.resx">
+      <DependentUpon>202409232318078_AddIsApprovedToPosts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

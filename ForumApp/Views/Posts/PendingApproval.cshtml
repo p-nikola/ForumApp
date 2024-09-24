@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ForumApp.Models.Post>
+
+<h2>Pending Posts for Approval</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>User</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(post.Title, "Details", new { id = post.PostId })</td>
+                <td>@post.Content</td>
+                <td>@post.User.UserName</td>
+                <td>@post.DateCreated.ToString("g")</td>
+                <td>
+                    @Html.ActionLink("Approve", "Approve", new { id = post.PostId }, new { @class = "btn btn-success" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

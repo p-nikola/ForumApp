@@ -58,6 +58,11 @@ else
 <script>
     $(document).ready(function () {
         // Hide all reply forms on page load
+        var commentId = window.location.hash.substring(1); // Get the comment ID from the URL fragment
+        if (commentId) {
+            console.log("Highlighting comment:", commentId);
+            $('#' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
+        }
         hideReplyForms();
     });
 

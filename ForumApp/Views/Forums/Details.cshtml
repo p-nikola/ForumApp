@@ -7,7 +7,7 @@
 
 <h3>Posts</h3>
 
-@if (Model.Posts.Any())
+@if (Model.Posts.Any(p=>p.IsApproved))
 {
     <table id="postsTable" class="table">
         <thead>

@@ -47,10 +47,13 @@ namespace ForumApp.Controllers
             {
                 post.DateCreated = DateTime.Now;
                 post.UserId = User.Identity.GetUserId();
+                post.IsApproved = false; // Post is not approved by default
                 db.Posts.Add(post);
                 db.SaveChanges();
-                return RedirectToAction("Details", "Forums", new { id = post.ForumId });
+
+                return RedirectToAction("PostPendingApproval"); // Redirect to a confirmation page
             }
+
             return View(post);
         }
 
@@ -86,7 +89,32 @@ namespace ForumApp.Controllers
             db.Posts.Remove(post);
             db.SaveChanges();
             return RedirectToAction("Details", "Forums", new { id = post.ForumId });
-        }       
+        }
+
+
+        public ActionResult PostPendingApproval()
+        {
+            return View();
+        }
+
+        public ActionResult PendingApproval()
+        {
+            var pendingPosts = db.Posts.Where(p => !p.IsApproved).ToList();
+            return View(pendingPosts);
+        }
+
+        public ActionResult Approve(int id)
+        {
+            var post = db.Posts.Find(id);
+            if (post != null)
+            {
+                post.IsApproved = true;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("PendingApproval"); // Redirect back to the pending posts list
+        }
+
 
 
 

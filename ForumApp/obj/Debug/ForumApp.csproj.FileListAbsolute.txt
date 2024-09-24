@@ -117,3 +117,4 @@ C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\De
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddCascadeDeleteForComments.resources
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.RemoveCascadeDeleteForComments.resources
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddSoftDeleteToComments.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddIsApprovedToPosts.resources
