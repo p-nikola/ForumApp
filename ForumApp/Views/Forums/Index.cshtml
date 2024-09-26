@@ -1,45 +1,69 @@
 ﻿@model IEnumerable<ForumApp.Models.Forum>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Forums";
 }
+
 <link rel="stylesheet" type="text/css" href="~/Content/Forum/ForumDetails.css" />
 
-<h2>Forums</h2>
+<!-- Add Bootstrap classes for spacing and layout -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">@ViewBag.Title</h2>
 
-<!-- Table layout for forums -->
-<table id="forumsTable" class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(m=>m.Title)</th>
-            <th>@Html.DisplayNameFor(m => m.Description)</th>
-            <th>Posts</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var forum in Model)
-        {
-            <tr>
-                <td>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId })</td>
-                <td>@Html.DisplayFor(m => forum.Description)</td>
-                <td>@forum.Posts.Count()</td>
-                <td>
-                <button data-forum-id="@forum.ForumId" class="btn btn-danger js-delete">Delete Forum</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Card layout for forums -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Forums List</h4>
+        </div>
 
-@Html.ActionLink("Create New Forum", "Create")
+        <div class="card-body">
+            <!-- Add table responsive wrapper for better mobile support -->
+            <div class="table-responsive">
+                <table id="forumsTable" class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.Title)</th>
+                            <th>@Html.DisplayNameFor(m => m.Description)</th>
+                            <th>Posts</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var forum in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <h5>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId }, new { @class = "text-decoration-none text-primary" })</h5>
+                                </td>
+                                <td>@Html.DisplayFor(m => forum.Description)</td>
+                                <td><span class="badge badge-info text-dark">@forum.Posts.Count()</span></td>
+                                <td>
+                                    <button data-forum-id="@forum.ForumId" class="btn btn-danger btn-sm js-delete">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
+        <div class="card-footer text-right">
+            <!-- Create new forum button -->
+            @Html.ActionLink("Create New Forum", "Create", new { }, new { @class = "btn btn-success" })
+        </div>
+    </div>
+</div>
+
+<!-- Scripts section -->
 @section Scripts {
     <script>
         $(document).ready(function () {
             // Initialize DataTables
-            var table = $('#forumsTable').DataTable()
+            var table = $('#forumsTable').DataTable();
 
+            // Delete forum confirmation
             $("#forumsTable .js-delete").on("click", function () {
                 var button = $(this);
                 bootbox.confirm("Are you sure you want to delete this forum?", function (result) {
@@ -56,14 +80,7 @@
                         });
                     }
                 });
-
-
-
-            })
-
-
-
-
+            });
         });
     </script>
 }

@@ -408,6 +408,7 @@
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\Forum\ForumDetails.css" />
+    <Content Include="Content\Posts\CommentsReplies.css" />
     <Content Include="Content\Posts\PostsStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

@@ -1,7 +1,7 @@
 ﻿.profile-picture {
     border-radius: 80%; /* Makes the image round */
-    width: 1000px; /* Smaller width */
-    height: 50px; /* Smaller height */
+    width: 50px; /* Smaller width */
+    height: 70px; /* Smaller height */
     object-fit: cover; /* Ensures the image covers the entire circle */
 }
 

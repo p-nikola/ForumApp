@@ -51,8 +51,9 @@ namespace ForumApp.Controllers
                 db.Posts.Add(post);
                 db.SaveChanges();
 
-                return RedirectToAction("PostPendingApproval"); // Redirect to a confirmation page
+                return RedirectToAction("Details", "Forums", new { id = post.ForumId, postSubmitted = true }); // Redirect to a confirmation page
             }
+            ViewBag.ForumId = post.ForumId; // proveri ova zasto se prakja
 
             return View(post);
         }

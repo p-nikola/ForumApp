@@ -5,7 +5,7 @@
 
 <h2>@Model.Title</h2>
 <p>@Model.Content</p>
-<p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="profile-picture" style="width:100px" /></p>
+<p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle me-2" style="width: 100px; height: 100px; object-fit: cover;" /></p>
 
 <div>
     <button class="btn btn-success" onclick="upvotePost(@Model.PostId)">Upvote</button>
