@@ -1,6 +1,6 @@
 ﻿@model ForumApp.Models.CommentViewModel
 
-@using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "reply-form", id = "replyForm-" + Model.ParentCommentId }))
+@using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "reply-form mt-2", id = "replyForm-" + Model.ParentCommentId }))
 {
     @Html.AntiForgeryToken()
 

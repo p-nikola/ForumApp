@@ -1,0 +1,95 @@
+﻿/* Container and Titles */
+.user-comments-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-comments-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #333;
+}
+
+/* Comments List */
+.comments-list {
+    list-style: none;
+    padding: 0;
+}
+
+.post-comments {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.post-title {
+    margin-bottom: 10px;
+}
+
+    .post-title a {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1em;
+    }
+
+        .post-title a:hover {
+            text-decoration: underline;
+        }
+
+.post-forum {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+    .post-forum .forum-link {
+        color: black;
+        text-decoration: none;
+    }
+
+        .post-forum .forum-link:hover {
+            text-decoration: underline;
+        }
+
+.comments-count {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* Individual Comments */
+.individual-comments {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+    border-radius: 3px;
+}
+
+.comment-content {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.comment-date {
+    font-size: 0.85em;
+    color: #999;
+    text-align: right;
+}
+
+.no-comments-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: #777;
+    margin-top: 50px;
+}

@@ -1,120 +1,60 @@
-﻿/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+﻿.comment-thread {
+    border-left: 1px solid #e6e6e6;
+    margin-left: 1rem;
+    padding-left: 1rem;
 }
 
-/* Comment wrapper */
-.comment-wrapper {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 15px;
-    transition: box-shadow 0.3s ease;
-}
-
-    .comment-wrapper:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Nested comments */
-    .comment-wrapper .comment-wrapper {
-        margin-left: 40px;
-        border-left: 2px solid #e0e0e0;
-    }
-
-/* Comment content */
 .comment-content {
-    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
-/* User info */
-.user-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+.vote-buttons {
+    display: inline-block;
+    margin-right: 0.5rem;
 }
 
-.username-link {
-    color: #2c3e50;
-    text-decoration: none;
+    .vote-buttons button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0 2px;
+    }
+
+.comment-score {
+    display: inline-block;
     font-weight: bold;
-    margin-right: 10px;
+    margin: 0 0.25rem;
 }
 
 .profile-picture {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.5rem;
 }
 
-.comment-date {
-    color: #7f8c8d;
-    font-size: 0.9em;
+.comment-meta {
+    font-size: 0.8rem;
+    color: #878A8C;
 }
 
-/* Comment buttons */
-.comment-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+.comment-actions {
+    font-size: 0.9rem;
 }
 
-.btn {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
+    .comment-actions button, .comment-actions .reply-button {
+        margin-right: 0.5rem;
+    }
+
+.reply-button {
     cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
 }
 
-.btn-success {
-    background-color: #2ecc71;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.btn-warning {
-    background-color: #f39c12;
-    color: white;
-}
-
-.btn-secondary {
-    background-color: #95a5a6;
-    color: white;
-}
-
-.btn:hover {
-    opacity: 0.8;
-}
-
-/* Vote count */
-.vote-count {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 0.9em;
-    color: #7f8c8d;
-}
-
-/* Reply form */
-.reply-form-container {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #e0e0e0;
-}
-
-/* Deleted comment */
 .deleted-comment {
+    color: #dc3545;
     font-style: italic;
-    color: #7f8c8d;
 }

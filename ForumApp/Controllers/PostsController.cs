@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace ForumApp.Controllers
 {
@@ -13,16 +14,38 @@ namespace ForumApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts/Details/5
+        // PostsController.cs - In the Details action
         public ActionResult Details(int id)
         {
-            var post = db.Posts.Include("Comments").FirstOrDefault(p => p.PostId == id);
-            post.Content = string.Empty;
+            var post = db.Posts
+                .Include(p => p.Votes)
+                .Include(p => p.Comments.Select(c => c.Votes))
+                .FirstOrDefault(p => p.PostId == id);
+            post.Content = String.Empty;
+
             if (post == null)
             {
                 return HttpNotFound();
             }
+
+            var userId = User.Identity.GetUserId();
+            ViewBag.UserPostVoteType = post.Votes.FirstOrDefault(v => v.UserId == userId)?.VoteType ?? 0;
+
+            // Pass similar information for comments if needed
+
+            //can you make a breadcrumb here?
+            var breadcrumb= new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem { Title = "Forums", Url = Url.Action("Index","Forums") },
+                new BreadcrumbItem { Title = post.Forum.Title, Url = Url.Action("Details", "Forums", new { id = post.ForumId }) },
+                new BreadcrumbItem { Title = post.Title, IsActive=true}
+            };
+
+            ViewBag.Breadcrumbs = breadcrumb;    
+
             return View(post);
         }
+
 
         // GET: Posts/Create
         public ActionResult Create(int forumId)
@@ -58,8 +81,12 @@ namespace ForumApp.Controllers
             return View(post);
         }
 
-        [HttpPost]
-        public ActionResult UpvotePost(int postId)
+       /* [HttpPost]
+        public ActionResult Up
+       
+        
+        
+        Post(int postId)
         {
             var post = db.Posts.Find(postId);
             if (post != null)
@@ -83,7 +110,7 @@ namespace ForumApp.Controllers
             }
             return Json(new { success = false });
         }
-
+*/
         public ActionResult DeletePost(int id)
         {
             Post post = db.Posts.Find(id);
@@ -115,6 +142,94 @@ namespace ForumApp.Controllers
 
             return RedirectToAction("PendingApproval"); // Redirect back to the pending posts list
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult UpvotePost(int postId)
+        {
+            var userId = User.Identity.GetUserId();
+            var existingVote = db.PostVotes.FirstOrDefault(v => v.PostId == postId && v.UserId == userId);
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == 1)
+                {
+                    // User clicked upvote again, remove the vote
+                    db.PostVotes.Remove(existingVote);
+                }
+                else
+                {
+                    // Change vote from downvote to upvote
+                    existingVote.VoteType = 1;
+                    existingVote.DateVoted = DateTime.Now;
+                    db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                // Add new upvote
+                var vote = new PostVote
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    VoteType = 1,
+                    DateVoted = DateTime.Now
+                };
+                db.PostVotes.Add(vote);
+            }
+
+            db.SaveChanges();
+
+            // Recalculate vote counts
+            var post = db.Posts.Include(p => p.Votes).FirstOrDefault(p => p.PostId == postId);
+            return Json(new { success = true, upvotes = post.Upvotes, downvotes = post.Downvotes });
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult DownvotePost(int postId)
+        {
+            var userId = User.Identity.GetUserId();
+            var existingVote = db.PostVotes.FirstOrDefault(v => v.PostId == postId && v.UserId == userId);
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == -1)
+                {
+                    // User clicked downvote again, remove the vote
+                    db.PostVotes.Remove(existingVote);
+                }
+                else
+                {
+                    // Change vote from upvote to downvote
+                    existingVote.VoteType = -1;
+                    existingVote.DateVoted = DateTime.Now;
+                    db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                // Add new downvote
+                var vote = new PostVote
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    VoteType = -1,
+                    DateVoted = DateTime.Now
+                };
+                db.PostVotes.Add(vote);
+            }
+
+            db.SaveChanges();
+
+            // Recalculate vote counts
+            var post = db.Posts.Include(p => p.Votes).FirstOrDefault(p => p.PostId == postId);
+            return Json(new { success = true, upvotes = post.Upvotes, downvotes = post.Downvotes });
+        }
+
+
 
 
 

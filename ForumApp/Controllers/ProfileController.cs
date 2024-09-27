@@ -120,6 +120,7 @@ namespace ForumApp.Controllers
             }
 
             ViewBag.UserName = user.UserName;
+            ViewBag.UserId = user.Id; 
 
 
             return View(user.Comments); // Return the list of comments to the view

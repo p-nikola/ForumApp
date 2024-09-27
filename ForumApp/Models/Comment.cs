@@ -13,6 +13,7 @@ namespace ForumApp.Models
         public int CommentId { get; set; }
 
         [Required]
+        [StringLength(500)]
         public string Content { get; set; }
 
         public DateTime DateCreated { get; set; }
@@ -33,15 +34,17 @@ namespace ForumApp.Models
 
         public virtual ApplicationUser User { get; set; }
 
-        public int Upvotes { get; set; }
-        public int Downvotes { get; set; }
+        public int Upvotes => Votes?.Where(v => v.VoteType == 1).Count() ?? 0;
+        public int Downvotes => Votes?.Where(v => v.VoteType == -1).Count() ?? 0;
 
         public bool IsSoftDeleted { get; set; } = false;
 
+        public virtual ICollection<CommentVote> Votes { get; set; }
 
         public Comment()
         {
             Replies = new HashSet<Comment>();
+            Votes=new HashSet<CommentVote>();   
         }
 
 

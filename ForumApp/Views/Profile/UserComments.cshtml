@@ -1,24 +1,46 @@
 ﻿@model IEnumerable<ForumApp.Models.Comment>
 
-<h2>@ViewBag.Username's Comments</h2>
+<!-- Include your custom CSS -->
 
-@if (Model.Any())
-{
-    <ul>
-        @foreach (var comment in Model)
-        {
-            <li>
-                <a href="@Url.Action("Details", "Posts", new { id = comment.Post.PostId })#comment-@comment.CommentId">@comment.Content</a>
-                - @comment.DateCreated in forum:
-                @Html.ActionLink(comment.Post.Forum.Title, "Details", "Forums", new { id = comment.Post.Forum.ForumId }, null)
-                - @comment.DateCreated
-                <!-- Link to the specific comment within the post -->
+<link rel="stylesheet" type="text/css" href="~/Content/UserStyles/CommentsStyle.css" /> 
 
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>This user has not made any comments yet.</p>
-}
+<div class="user-comments-container">
+    <h2 class="user-comments-title">@ViewBag.Username's Comments</h2>
+
+    @if (Model.Any())
+    {
+        <div class="comments-list">
+            @foreach (var commentGroup in Model.GroupBy(c => c.Post.PostId))  // Group comments by post
+            {
+                var post = commentGroup.First().Post;  // Get the post for this group of comments
+                <div class="post-comments">
+                    <h3 class="post-title">
+                        <!-- Link to the post and highlight comments made by the user -->
+                        <a href="@Url.Action("Details", "Posts", new { id = post.PostId })?highlightUserComments=@ViewBag.UserId">@post.Title</a>  in forum:
+                        @Html.ActionLink(post.Forum.Title, "Details", "Forums", new { id = post.Forum.ForumId }, new { @class = "forum-link" })
+
+                    </h3>
+                    <p class="comments-count">Total Comments: <span>@commentGroup.Count()</span></p>
+
+                    <ul class="individual-comments">
+                        @foreach (var comment in commentGroup)
+                        {
+                            <li class="comment-item">
+                                <div class="comment-content">
+                                    @Html.Raw(comment.Content.Length > 200 ? comment.Content.Substring(0, 200) + "..." : comment.Content)
+                                </div>
+                                <div class="comment-date">
+                                    Posted on @comment.DateCreated.ToString("MMMM dd, yyyy")
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="no-comments-message">This user has not made any comments yet.</p>
+    }
+</div>

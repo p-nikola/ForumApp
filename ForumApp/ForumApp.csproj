@@ -222,14 +222,45 @@
     <Compile Include="Migrations\202409232318078_AddIsApprovedToPosts.Designer.cs">
       <DependentUpon>202409232318078_AddIsApprovedToPosts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409261735259_AddPostVote.cs" />
+    <Compile Include="Migrations\202409261735259_AddPostVote.Designer.cs">
+      <DependentUpon>202409261735259_AddPostVote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409261739026_AddPostVoteTable.cs" />
+    <Compile Include="Migrations\202409261739026_AddPostVoteTable.Designer.cs">
+      <DependentUpon>202409261739026_AddPostVoteTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409261817493_AddVotesTable.cs" />
+    <Compile Include="Migrations\202409261817493_AddVotesTable.Designer.cs">
+      <DependentUpon>202409261817493_AddVotesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409261825242_added_votes_to_comment_post.cs" />
+    <Compile Include="Migrations\202409261825242_added_votes_to_comment_post.Designer.cs">
+      <DependentUpon>202409261825242_added_votes_to_comment_post.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409261958455_AddPostAndCommentVotes.cs" />
+    <Compile Include="Migrations\202409261958455_AddPostAndCommentVotes.Designer.cs">
+      <DependentUpon>202409261958455_AddPostAndCommentVotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409270158200_added_char_limit_for_content.cs" />
+    <Compile Include="Migrations\202409270158200_added_char_limit_for_content.Designer.cs">
+      <DependentUpon>202409270158200_added_char_limit_for_content.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409270202553_added_char_limit_for_content_2.cs" />
+    <Compile Include="Migrations\202409270202553_added_char_limit_for_content_2.Designer.cs">
+      <DependentUpon>202409270202553_added_char_limit_for_content_2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BreadcrumbItem.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentViewModel.cs" />
+    <Compile Include="Models\CommentVote.cs" />
     <Compile Include="Models\Forum.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\PostVote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -408,8 +439,14 @@
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\Forum\ForumDetails.css" />
+    <Content Include="Content\Images\background.jpg" />
+    <Content Include="Content\Posts\CommentList.css" />
     <Content Include="Content\Posts\CommentsReplies.css" />
     <Content Include="Content\Posts\PostsStyle.css" />
+    <Content Include="Content\UserStyles\CommentsStyle.css" />
+    <Content Include="Content\UserStyles\EditProfile.css" />
+    <Content Include="Content\UserStyles\PostsStyle.css" />
+    <Content Include="Content\UserStyles\Profile.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -561,6 +598,7 @@
     <Content Include="Views\Account\AddUserToRole.cshtml" />
     <Content Include="Views\Posts\PostPendingApproval.cshtml" />
     <Content Include="Views\Posts\PendingApproval.cshtml" />
+    <Content Include="Views\Shared\_Breadcrumb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -625,6 +663,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409232318078_AddIsApprovedToPosts.resx">
       <DependentUpon>202409232318078_AddIsApprovedToPosts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409261735259_AddPostVote.resx">
+      <DependentUpon>202409261735259_AddPostVote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409261739026_AddPostVoteTable.resx">
+      <DependentUpon>202409261739026_AddPostVoteTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409261817493_AddVotesTable.resx">
+      <DependentUpon>202409261817493_AddVotesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409261825242_added_votes_to_comment_post.resx">
+      <DependentUpon>202409261825242_added_votes_to_comment_post.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409261958455_AddPostAndCommentVotes.resx">
+      <DependentUpon>202409261958455_AddPostAndCommentVotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409270158200_added_char_limit_for_content.resx">
+      <DependentUpon>202409270158200_added_char_limit_for_content.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409270202553_added_char_limit_for_content_2.resx">
+      <DependentUpon>202409270202553_added_char_limit_for_content_2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

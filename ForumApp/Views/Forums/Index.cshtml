@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<ForumApp.Models.Forum>
 
 @{
-    ViewBag.Title = "Forums";
+    ViewBag.Title = "NikolaForums";
 }
+
+
+@Html.Partial("_Breadcrumb", ViewBag.Breadcrumbs as IEnumerable<ForumApp.Models.BreadcrumbItem>)
 
 <link rel="stylesheet" type="text/css" href="~/Content/Forum/ForumDetails.css" />
 
@@ -36,7 +39,7 @@
                                     <h5>@Html.ActionLink(forum.Title, "Details", new { id = forum.ForumId }, new { @class = "text-decoration-none text-primary" })</h5>
                                 </td>
                                 <td>@Html.DisplayFor(m => forum.Description)</td>
-                                <td><span class="badge badge-info text-dark">@forum.Posts.Count()</span></td>
+                                <td><span class="badge badge-info text-dark">@forum.Posts.Where(p => p.IsApproved).Count()</span></td>
                                 <td>
                                     <button data-forum-id="@forum.ForumId" class="btn btn-danger btn-sm js-delete">
                                         <i class="fas fa-trash-alt"></i> Delete
@@ -60,22 +63,48 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Initialize DataTables
-            var table = $('#forumsTable').DataTable();
+            // Initialize DataTables with server-side processing
+            var table = $('#forumsTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetForums", "Forums")",  // Server-side action to load data
+                    "type": "POST"
+                },
+                "columns": [
+                    { "data": "Title", "render": function (data, type, row) {
+                        return `<h5><a href='/Forums/Details/${row.ForumId}' class='text-decoration-none text-primary'>${data}</a></h5>`;
+                    }},
+                    { "data": "Description" },
+                    { "data": "PostsCount", "render": function (data, type, row) {
+                        return `<span class="badge badge-info text-dark">${data}</span>`;
+                    }},
+                    { "data": "ForumId", "render": function (data, type, row) {
+                        return `<button data-forum-id="${data}" class="btn btn-danger btn-sm js-delete">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>`;
+                    }}
+                ]
+            });
 
-            // Delete forum confirmation
-            $("#forumsTable .js-delete").on("click", function () {
+            // Use event delegation to handle the delete button dynamically
+            $("#forumsTable").on("click", ".js-delete", function () {
                 var button = $(this);
+                var forumId = button.attr("data-forum-id");
+
+                // Confirm deletion
                 bootbox.confirm("Are you sure you want to delete this forum?", function (result) {
                     if (result) {
                         $.ajax({
-                            url: "/Forums/DeleteForum/" + button.attr("data-forum-id"),
+                            url: "/Forums/DeleteForum/" + forumId,
                             method: "GET",
                             success: function () {
+                                // Remove the row from DataTables and redraw the table
                                 table.row(button.parents("tr")).remove().draw();
                             },
                             error: function (err) {
-                                console.log(err);
+                                console.log("Error deleting forum:", err);
+                                bootbox.alert("An error occurred while deleting the forum.");
                             }
                         });
                     }

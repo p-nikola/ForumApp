@@ -1,9 +1,11 @@
 ﻿.profile-picture {
-    border-radius: 80%; /* Makes the image round */
-    width: 50px; /* Smaller width */
-    height: 70px; /* Smaller height */
-    object-fit: cover; /* Ensures the image covers the entire circle */
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.5rem;
 }
+
 
 
 .highlight-comment {
@@ -13,4 +15,161 @@
     padding: 5px; /* Optional: padding for spacing */
     color:black
 }
+
+
+.comment-thread {
+    border-left: 1px solid #e6e6e6;
+    margin-left: 1rem;
+    padding-left: 1rem;
+}
+
+.comment-content {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.vote-buttons {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+    .vote-buttons button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0 2px;
+    }
+
+.comment-score {
+    display: inline-block;
+    font-weight: bold;
+    margin: 0 0.25rem;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.comment-meta {
+    font-size: 0.8rem;
+    color: #878A8C;
+}
+
+.comment-actions {
+    font-size: 0.9rem;
+}
+
+    .comment-actions button, .comment-actions .reply-button {
+        margin-right: 0.5rem;
+    }
+
+.reply-button {
+    cursor: pointer;
+}
+
+.deleted-comment {
+    color: #dc3545;
+    font-style: italic;
+}
+
+
+/* High-specificity selectors for vote buttons */
+body .container .btn-vote.btn-success,
+body .container .btn-vote.btn-danger {
+    transition: all 0.3s ease;
+}
+
+    body .container .btn-vote.btn-success.selected-vote {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        color: #000 !important;
+    }
+
+    body .container .btn-vote.btn-danger.selected-vote {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        color: #000 !important;
+    }
+
+    body .container .btn-vote.btn-success:not(.selected-vote):hover,
+    body .container .btn-vote.btn-danger:not(.selected-vote):hover {
+        opacity: 0.8;
+    }
+
+
+/* Style for comment wrapper */
+.comment-wrapper {
+    position: relative;
+    margin-top: 20px;
+}
+
+    /* Vertical line for nested comments */
+    .comment-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -10px; /* Adjust as needed */
+        bottom: 0;
+        width: 2px;
+        background: #ccc;
+    }
+
+    /* Remove vertical line for top-level comments */
+    .comment-wrapper[style*="margin-left: 0px"]::before {
+        display: none;
+    }
+
+/* Style for comments */
+.comment {
+    background-color: #f8f9fa; /* Light background */
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Style for comment meta information */
+.comment-meta {
+    margin-top: 10px;
+}
+
+/* Style for profile picture */
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+/* Style for selected vote buttons */
+.selected-vote {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Style for comment actions */
+.comment-actions {
+    margin-top: 10px;
+}
+
+/* Style for reply form */
+.reply-form-container {
+    margin-top: 10px;
+}
+
+/* Indentation for nested comments */
+.comment-wrapper {
+    padding-left: 20px;
+}
+
+/* Optional hover effect for comments */
+.comment:hover {
+    background-color: #e9ecef;
+}
+
+
 

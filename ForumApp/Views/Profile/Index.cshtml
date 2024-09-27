@@ -1,18 +1,53 @@
 ﻿@model ForumApp.Models.ApplicationUser
+@using Microsoft.AspNet.Identity
+<!-- Include your custom CSS -->
+<link rel="stylesheet" type="text/css" href="~/Content/UserStyles/Profile.css" />
 
-<h2>@Model.UserName's Profile</h2>
-<p>Email: @Model.Email</p>
-<p>Date Joined: @Model.DateJoined</p>
-<img src="@Model.ProfilePictureUrl" alt="Profile Picture" style="width:150px;" />
-<br />
+<div class="container mt-5">
+    <!-- Profile Header -->
+    <div class="profile-header card mb-4">
+        <div class="card-body text-center">
+            <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="profile-picture rounded-circle mb-3" />
+            <h2 class="profile-username">@Model.UserName's Profile</h2>
+            <p class="profile-email">Email: <a href="mailto:@Model.Email">@Model.Email</a></p>
+            <p class="profile-date-joined">Date Joined: @Model.DateJoined.ToString("MMMM dd, yyyy")</p>
+        </div>
+    </div>
 
-<h3>User Stats</h3>
-<p>Total Upvotes: @Model.TotalUpvotes</p>
-<p>Total Downvotes: @Model.TotalDownvotes</p>
+    <!-- User Stats -->
+    <div class="user-stats card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">User Stats</h3>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-6 mb-3">
+                    <div class="stat-box">
+                        <h4>Total Upvotes</h4>
+                        <p class="stat-number">@Model.TotalUpvotes</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="stat-box">
+                        <h4>Total Downvotes</h4>
+                        <p class="stat-number">@Model.TotalDownvotes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<br />
-<a href="@Url.Action("Edit")">Edit Profile</a>
-<br />
-<br />
-@Html.ActionLink("View All Posts", "UserPosts", "Profile", new { id = Model.Id }, new { @class = "btn btn-primary" })
-@Html.ActionLink("View All Comments", "UserComments", "Profile", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+    <!-- Profile Actions -->
+    <div class="profile-actions text-center mb-4">
+        <div class="d-flex justify-content-center gap-2">
+            @Html.ActionLink("View All Posts", "UserPosts", "Profile", new { id = Model.Id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("View All Comments", "UserComments", "Profile", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+        </div>
+        <br />
+        @if (Model.Id == User.Identity.GetUserId())
+        {
+            <a href="@Url.Action("Edit")" class="btn btn-warning mb-2">Edit Profile</a>
+        }
+
+    </div>
+</div>

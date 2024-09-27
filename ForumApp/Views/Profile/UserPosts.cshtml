@@ -1,22 +1,37 @@
 ﻿@model IEnumerable<ForumApp.Models.Post>
 
-<h2>@ViewBag.UserName's Posts</h2>
+<!-- Include your custom CSS -->
 
-@if (Model.Any())
-{
-    <ul>
-        @foreach (var post in Model)
-        {
-            <li>
-                @Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId }, null) - @post.DateCreated
-                in forum:
-                @Html.ActionLink(post.Forum.Title, "Details", "Forums", new { id = post.Forum.ForumId }, null)
-                - @post.DateCreated
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>This user has not made any posts yet.</p>
-}
+<link rel="stylesheet" type="text/css" href="~/Content/UserStyles/PostsStyle.css" />
+
+<div class="user-posts-container">
+    <h2 class="user-posts-title">@ViewBag.UserName's Posts</h2>
+
+    @if (Model.Any())
+    {
+        <div class="posts-list">
+            @foreach (var post in Model)
+            {
+                <div class="post-item">
+                    <h3 class="post-title">
+                        @Html.ActionLink(post.Title, "Details", "Posts", new { id = post.PostId }, new { @class = "post-link" })  in forum: @Html.ActionLink(post.Forum.Title, "Details", "Forums", new { id = post.Forum.ForumId }, new { @class = "forum-link" })
+                    </h3>
+                    <div class="post-meta">
+                        <span class="post-date">
+                            Posted on @post.DateCreated.ToString("MMMM dd, yyyy")
+                        </span>
+                    </div>
+                    <span style="font-size:1.5rem;font-weight:bold">Description:</span>
+                    <div class="post-excerpt">
+                        
+                        @Html.Raw(post.Content.Length > 200 ? post.Content.Substring(0, 200) + "..." : post.Content)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="no-posts-message">This user has not made any posts yet.</p>
+    }
+</div>

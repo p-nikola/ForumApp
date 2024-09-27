@@ -1,0 +1,59 @@
+﻿/* Profile.css */
+
+/* Profile Header */
+.card-header h2 {
+    font-size: 1.8em;
+    margin: 0;
+}
+
+/* Form Labels */
+.control-label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form Control Plaintext */
+.form-control-plaintext {
+    font-size: 1em;
+    color: #555;
+}
+
+/* Profile Picture Preview */
+#ProfilePicturePreview {
+    margin-top: 15px;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Submit Button */
+.btn-primary {
+    padding: 10px;
+    font-size: 1.1em;
+}
+
+    /* Hover Effects for Buttons */
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+        opacity: 0.9;
+    }
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .btn-primary {
+        font-size: 1em;
+    }
+
+    #ProfilePicturePreview {
+        width: 120px;
+        height: 120px;
+    }
+}

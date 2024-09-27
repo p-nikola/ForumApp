@@ -77,7 +77,7 @@ namespace ForumApp.Controllers
 
 
 
-        [HttpPost]
+/*        [HttpPost]
         public ActionResult UpvoteComment(int commentId)
         {
             var comment = db.Comments.Find(commentId);
@@ -101,7 +101,7 @@ namespace ForumApp.Controllers
                 return Json(new { success = true, downvotes = comment.Downvotes });
             }
             return Json(new { success = false });
-        }
+        }*/
 
 
         [HttpPost]
@@ -143,7 +143,91 @@ namespace ForumApp.Controllers
         }
 
 
+        // CommentsController.cs
+        [HttpPost]
+        [Authorize]
+        public ActionResult UpvoteComment(int commentId)
+        {
+            var userId = User.Identity.GetUserId();
+            var existingVote = db.CommentVotes.FirstOrDefault(v => v.CommentId == commentId && v.UserId == userId);
 
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == 1)
+                {
+                    // User clicked upvote again, remove the vote
+                    db.CommentVotes.Remove(existingVote);
+                }
+                else
+                {
+                    // Change vote from downvote to upvote
+                    existingVote.VoteType = 1;
+                    existingVote.DateVoted = DateTime.Now;
+                    db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                // Add new upvote
+                var vote = new CommentVote
+                {
+                    CommentId = commentId,
+                    UserId = userId,
+                    VoteType = 1,
+                    DateVoted = DateTime.Now
+                };
+                db.CommentVotes.Add(vote);
+            }
+
+            db.SaveChanges();
+
+            // Recalculate vote counts
+            var comment = db.Comments.Include(c => c.Votes).FirstOrDefault(c => c.CommentId == commentId);
+            return Json(new { success = true, upvotes = comment.Upvotes, downvotes = comment.Downvotes });
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult DownvoteComment(int commentId)
+        {
+            var userId = User.Identity.GetUserId();
+            var existingVote = db.CommentVotes.FirstOrDefault(v => v.CommentId == commentId && v.UserId == userId);
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == -1)
+                {
+                    // User clicked downvote again, remove the vote
+                    db.CommentVotes.Remove(existingVote);
+                }
+                else
+                {
+                    // Change vote from upvote to downvote
+                    existingVote.VoteType = -1;
+                    existingVote.DateVoted = DateTime.Now;
+                    db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                // Add new downvote
+                var vote = new CommentVote
+                {
+                    CommentId = commentId,
+                    UserId = userId,
+                    VoteType = -1,
+                    DateVoted = DateTime.Now
+                };
+                db.CommentVotes.Add(vote);
+            }
+
+            db.SaveChanges();
+
+            // Recalculate vote counts
+            var comment = db.Comments.Include(c => c.Votes).FirstOrDefault(c => c.CommentId == commentId);
+            return Json(new { success = true, upvotes = comment.Upvotes, downvotes = comment.Downvotes });
+        }
 
     }
 }

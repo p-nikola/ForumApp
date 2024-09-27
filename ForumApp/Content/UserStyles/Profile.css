@@ -1,0 +1,75 @@
+﻿/* Profile.css */
+
+/* Profile Header */
+.profile-header .profile-picture {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.profile-username {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.profile-email a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    .profile-email a:hover {
+        text-decoration: underline;
+    }
+
+.profile-date-joined {
+    font-size: 1em;
+    color: #555;
+}
+
+/* User Stats */
+.user-stats .stat-box {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+    .user-stats .stat-box h4 {
+        font-size: 1.2em;
+        color: #333;
+    }
+
+.user-stats .stat-number {
+    font-size: 1.8em;
+    color: #007bff;
+    margin-top: 10px;
+}
+
+/* Profile Actions */
+.profile-actions .btn {
+    min-width: 150px;
+}
+
+.profile-actions .btn-warning {
+    margin-bottom: 10px;
+}
+
+.profile-actions .d-flex {
+    gap: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .user-stats .row .col-md-6 {
+        margin-bottom: 15px;
+    }
+
+    .profile-actions .btn {
+        width: 100%;
+    }
+
+    .profile-actions .d-flex {
+        flex-direction: column;
+    }
+}

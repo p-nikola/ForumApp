@@ -1,0 +1,22 @@
+﻿namespace ForumApp.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class added_char_limit_for_content : DbMigration
+    {
+        public override void Up()
+        {
+            AlterColumn("dbo.Comments", "Content", c => c.String(nullable: false, maxLength: 250));
+            AlterColumn("dbo.Posts", "Title", c => c.String(nullable: false, maxLength: 100));
+            AlterColumn("dbo.Posts", "Content", c => c.String(nullable: false, maxLength: 250));
+        }
+        
+        public override void Down()
+        {
+            AlterColumn("dbo.Posts", "Content", c => c.String(nullable: false));
+            AlterColumn("dbo.Posts", "Title", c => c.String(nullable: false, maxLength: 200));
+            AlterColumn("dbo.Comments", "Content", c => c.String(nullable: false));
+        }
+    }
+}

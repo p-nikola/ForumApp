@@ -118,3 +118,10 @@ C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\De
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.RemoveCascadeDeleteForComments.resources
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddSoftDeleteToComments.resources
 C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddIsApprovedToPosts.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddPostVote.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddPostVoteTable.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddVotesTable.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.added_votes_to_comment_post.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.AddPostAndCommentVotes.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.added_char_limit_for_content.resources
+C:\Users\RazorVision\Nextcloud\uni\4 semestar\IT\proekt\ForumApp\ForumApp\obj\Debug\ForumApp.Migrations.added_char_limit_for_content_2.resources

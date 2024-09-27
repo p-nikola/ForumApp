@@ -3,16 +3,42 @@
 <link rel="stylesheet" type="text/css" href="~/Content/Posts/PostsStyle.css" />
 
 
+@Html.Partial("_Breadcrumb", ViewBag.Breadcrumbs as IEnumerable<ForumApp.Models.BreadcrumbItem>)
+
+
+
 <h2>@Model.Title</h2>
 <p>@Model.Content</p>
 <p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle me-2" style="width: 100px; height: 100px; object-fit: cover;" /></p>
 
 <div>
-    <button class="btn btn-success" onclick="upvotePost(@Model.PostId)">Upvote</button>
-    <span>Upvotes: <span id="post-upvotes">@Model.Upvotes</span></span>
-    <button class="btn btn-danger" onclick="downvotePost(@Model.PostId)">Downvote</button>
-    <span>Downvotes: <span id="post-downvotes">@Model.Downvotes</span></span>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Post Upvote Button -->
+        <button id="upvote-post-@Model.PostId" class="btn btn-sm btn-outline-success btn-vote @(ViewBag.UserPostVoteType == 1 ? "selected-vote" : "")"
+                onclick="upvotePost(@Model.PostId)">
+            Upvote
+        </button>
+        <span> <span id="post-upvotes">@Model.Upvotes</span></span>
+
+        <!-- Post Downvote Button -->
+        <button id="downvote-post-@Model.PostId" class="btn btn-sm btn-outline-danger btn-vote @(ViewBag.UserPostVoteType == -1 ? "selected-vote" : "")"
+                onclick="downvotePost(@Model.PostId)">
+            Downvote
+        </button>
+        <span> <span id="post-downvotes">@Model.Downvotes</span></span>
+    }
+    else
+    {
+        <button class="btn btn-success" disabled>Upvote</button>
+        <button class="btn btn-danger" disabled>Downvote</button>
+        <p>Please log in to vote.</p>
+    }
+
+
+
 </div>
+
 
 
 
@@ -55,13 +81,29 @@ else
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
-<script>
+    <script>
     $(document).ready(function () {
-        // Hide all reply forms on page load
         var commentId = window.location.hash.substring(1); // Get the comment ID from the URL fragment
         if (commentId) {
             console.log("Highlighting comment:", commentId);
-            $('#' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
+            $('#comment-' + commentId).addClass('highlight-comment'); // Add a CSS class to highlight the comment
+        }
+
+        // Check if the URL has the "highlightUserComments" parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userIdToHighlight = urlParams.get('highlightUserComments');
+
+        if (userIdToHighlight) {
+            console.log('Highlighting comments for user ID:', userIdToHighlight);
+
+            // Loop through all comments and highlight those by the user
+            $('[data-user-id]').each(function () {
+                const commentUserId = $(this).data('user-id'); // Get the user ID for the comment
+                console.log("Comment user ID:", commentUserId);
+                if (commentUserId == userIdToHighlight) {
+                    $(this).addClass('highlight-comment'); // Add a CSS class to highlight the comment
+                }
+            });
         }
         hideReplyForms();
     });
@@ -116,10 +158,6 @@ else
         });
     }
 }
-
-
-
-
 
     // Function to hide all reply forms and set up event handlers for reply buttons and cancel buttons
     function hideReplyForms() {
@@ -211,23 +249,125 @@ else
     });
 
     // Function for upvote and downvote post
+
+
+function applySelectedStyle(button) {
+    button.css({
+        'background-color': '#ffc107',
+        'border-color': '#ffc107',
+        'color': '#000'
+    }).addClass('selected-vote');
+    console.log('Applied selected style to:', button);
+}
+
+function removeSelectedStyle(button) {
+    button.css({
+        'background-color': '',
+        'border-color': '',
+        'color': ''
+    }).removeClass('selected-vote');
+    console.log('Removed selected style from:', button);
+}
+
     function upvotePost(postId) {
+        console.log('Upvote clicked for post:', postId);
         $.post('@Url.Action("UpvotePost", "Posts")', { postId: postId }, function (data) {
+            console.log('Upvote response:', data);
             if (data.success) {
-                $('#post-upvotes').text(data.upvotes); // Update the upvotes count
+                $('#post-upvotes').text(data.upvotes);
+                $('#post-downvotes').text(data.downvotes);
+
+                var upvoteButton = $('#upvote-post-' + postId);
+                var downvoteButton = $('#downvote-post-' + postId);
+
+                if (upvoteButton.hasClass('selected-vote')) {
+                    removeSelectedStyle(upvoteButton);
+                } else {
+                    applySelectedStyle(upvoteButton);
+                    removeSelectedStyle(downvoteButton);
+                }
+            } else {
+                console.error('Error upvoting post:', data.error);
+                alert('An error occurred while upvoting the post: ' + data.error);
             }
+        }).fail(function (xhr, status, error) {
+            console.error('AJAX error upvoting post:', status, error);
+            alert('An error occurred while upvoting the post: ' + error);
         });
     }
 
     function downvotePost(postId) {
+        console.log('Downvote clicked for post:', postId);
         $.post('@Url.Action("DownvotePost", "Posts")', { postId: postId }, function (data) {
+            console.log('Downvote response:', data);
             if (data.success) {
-                $('#post-downvotes').text(data.downvotes); // Update the downvotes count
+                $('#post-upvotes').text(data.upvotes);
+                $('#post-downvotes').text(data.downvotes);
+
+                var upvoteButton = $('#upvote-post-' + postId);
+                var downvoteButton = $('#downvote-post-' + postId);
+
+                if (downvoteButton.hasClass('selected-vote')) {
+                    removeSelectedStyle(downvoteButton);
+                } else {
+                    applySelectedStyle(downvoteButton);
+                    removeSelectedStyle(upvoteButton);
+                }
+            } else {
+                console.error('Error downvoting post:', data.error);
+                alert('An error occurred while downvoting the post: ' + data.error);
             }
+        }).fail(function (xhr, status, error) {
+            console.error('AJAX error downvoting post:', status, error);
+            alert('An error occurred while downvoting the post: ' + error);
         });
     }
 
 
 
-</script>
+    function upvoteComment(commentId) {
+    $.post('@Url.Action("UpvoteComment", "Comments")', { commentId: commentId }, function (data) {
+        if (data.success) {
+            $('#comment-upvotes-' + commentId).text(data.upvotes);
+            $('#comment-downvotes-' + commentId).text(data.downvotes);
+
+            var upvoteButton = $('#upvote-comment-' + commentId);
+            var downvoteButton = $('#downvote-comment-' + commentId);
+
+
+            if (upvoteButton.hasClass('selected-vote')) {
+                removeSelectedStyle(upvoteButton);
+            } else {
+                applySelectedStyle(upvoteButton);
+                removeSelectedStyle(downvoteButton);
+            }
+        } else {
+            alert('An error occurred while upvoting the comment.');
+        }
+    });
+}
+
+function downvoteComment(commentId) {
+    $.post('@Url.Action("DownvoteComment", "Comments")', { commentId: commentId }, function (data) {
+        if (data.success) {
+            $('#comment-upvotes-' + commentId).text(data.upvotes);
+            $('#comment-downvotes-' + commentId).text(data.downvotes);
+
+            var upvoteButton = $('#upvote-comment-' + commentId);
+            var downvoteButton = $('#downvote-comment-' + commentId);
+
+            if (downvoteButton.hasClass('selected-vote')) {
+                removeSelectedStyle(downvoteButton);
+            } else {
+                applySelectedStyle(downvoteButton);
+                removeSelectedStyle(upvoteButton);
+            }
+        } else {
+            alert('An error occurred while downvoting the comment.');
+        }
+    });
+}
+
+
+    </script>
 }

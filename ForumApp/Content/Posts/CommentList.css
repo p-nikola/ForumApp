@@ -1,0 +1,182 @@
+﻿/* PostsStyle.css */
+
+/* General Container Styles */
+.container {
+    max-width: 800px; /* Adjust as needed */
+    margin: 0 auto;
+}
+
+/* Comment Wrapper */
+.comment-wrapper {
+    margin-bottom: 20px;
+}
+
+    /* Indentation for Replies */
+    .comment-wrapper.reply {
+        margin-left: 50px; /* Indent replies */
+    }
+
+/* Comment Card */
+.comment {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Soft Deleted Comment */
+.comment-deleted {
+    background-color: #e9ecef; /* Slightly darker gray */
+    font-style: italic;
+    color: #6c757d; /* Muted text color */
+}
+
+/* Comment Content */
+.comment p {
+    font-size: 1rem;
+    color: #343a40; /* Dark gray text */
+    margin-bottom: 10px;
+}
+
+/* Comment Meta Information */
+.comment-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.username-link {
+    color: #007bff; /* Bootstrap primary color */
+    text-decoration: none;
+}
+
+    .username-link:hover {
+        text-decoration: underline;
+    }
+
+/* Profile Picture */
+.comment-meta img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-left: 8px;
+    border: 2px solid #dee2e6; /* Light border */
+}
+
+/* Comment Actions */
+.comment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* Vote Buttons */
+.btn-vote {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .btn-vote i {
+        margin-right: 5px;
+    }
+
+/* Upvote Button */
+.btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+/* Downvote Button */
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+/* Selected Vote State */
+.selected-vote {
+    background-color: #28a745; /* Green for upvote */
+    color: #fff;
+}
+
+.btn-outline-danger.selected-vote {
+    background-color: #dc3545; /* Red for downvote */
+    color: #fff;
+}
+
+/* Delete Buttons */
+.btn-danger,
+.btn-warning,
+.btn-secondary {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .btn-danger:hover,
+    .btn-warning:hover,
+    .btn-secondary:hover {
+        opacity: 0.8;
+    }
+
+/* Reply Button */
+.reply-button {
+    margin-top: 10px;
+}
+
+/* Reply Form Container */
+.reply-form-container {
+    margin-top: 10px;
+    margin-left: 50px; /* Indent reply forms */
+}
+
+/* Reply Form */
+.reply-form {
+    background-color: #f1f3f5; /* Slightly darker background */
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Cancel Button */
+.cancel-button {
+    margin-left: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .comment-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-vote {
+        margin-bottom: 5px;
+    }
+
+    .reply-button {
+        width: 100%;
+    }
+
+    .reply-form-container {
+        margin-left: 0; /* Remove indentation on small screens */
+    }
+}

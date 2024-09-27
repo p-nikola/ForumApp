@@ -12,10 +12,11 @@ namespace ForumApp.Models
         public int PostId { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(100)]
         public string Title { get; set; }
 
         [Required]
+        [StringLength(500)]
         public string Content { get; set; }
 
         public DateTime DateCreated { get; set; }
@@ -29,15 +30,18 @@ namespace ForumApp.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        public int Upvotes { get; set; }
-        public int Downvotes { get; set; }
+        public int Upvotes => Votes?.Where(v => v.VoteType == 1).Count() ?? 0;
+        public int Downvotes => Votes?.Where(v => v.VoteType == -1).Count() ?? 0;
 
         public bool IsApproved { get; set; } = false;
+
+        public virtual ICollection<PostVote> Votes { get; set; }
 
 
         public Post()
         {
             Comments = new HashSet<Comment>();
+            Votes = new HashSet<PostVote>();    
         }
 
 
