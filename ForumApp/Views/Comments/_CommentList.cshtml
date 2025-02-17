@@ -22,75 +22,95 @@
                 {
 
 
-                    <em>User deleted this comment</em>
+                    <div class="comment bg-light p-3 rounded">User deleted this comment</div>
+                    <br />
+                    if (User.IsInRole("Admin") && User.Identity.IsAuthenticated) { 
+                    <button type="button" class="btn btn-sm btn-warning ml-2" onclick="deleteComment(@comment.CommentId)">Delete</button>
+                    }
                 }
                 else
                 {
 
-                    <div data-user-id="@comment.UserId" id="comment-@comment.CommentId" class="comment bg-light p-3 rounded">
+                <div data-user-id="@comment.UserId" id="comment-@comment.CommentId" class="comment bg-light p-3 rounded">
 
-                        <p>@comment.Content</p>
+                    <p>@comment.Content</p>
 
-                        <div id="comment-buttons-@comment.CommentId" class="comment-actions mt-2">
+                    <div id="comment-buttons-@comment.CommentId" class="comment-actions mt-2">
 
-                            <p>
-                                <small>
-                                    Posted on @comment.DateCreated by @Html.ActionLink(comment.User.UserName, "Index", "Profile", new { id = comment.UserId }, new { @class = "username-link" })
-                                    <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture" style="width:50px;height:50px;object-fit:cover;border-radius:50%;margin-left:0.5rem" />
-                                </small>
-                            </p>
+                        <p>
+                            <small>
+                                Posted on @comment.DateCreated by @Html.ActionLink(comment.User.UserName, "Index", "Profile", new { id = comment.UserId }, new { @class = "username-link" })
+                                <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture" style="width:50px;height:50px;object-fit:cover;border-radius:50%;margin-left:0.5rem" />
+                            </small>
+                        </p>
 
-                            <div>
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <!-- Comment Upvote Button -->
-                                    <button id="upvote-comment-@comment.CommentId" class="btn btn-sm btn-outline-success btn-vote @(userVoteType == 1 ? "selected-vote" : "")"
-                                            onclick="upvoteComment(@comment.CommentId)">
-                                        Upvote
-                                    </button>
-                                    <span> <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
+                        <div>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <!-- Comment Upvote Button -->
+                                <button id="upvote-comment-@comment.CommentId" class="btn btn-sm btn-outline-success btn-vote @(userVoteType == 1 ? "selected-vote" : "")"
+                                        onclick="upvoteComment(@comment.CommentId)">
+                                    Upvote
+                                </button>
+                                <span> <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
 
-                                    <!-- Comment Downvote Button -->
-                                    <button id="downvote-comment-@comment.CommentId" class="btn btn-sm btn-outline-danger btn-vote @(userVoteType == -1 ? "selected-vote" : "")"
-                                            onclick="downvoteComment(@comment.CommentId)">
-                                        Downvote
-                                    </button>
-                                    <span> <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-sm btn-outline-success" disabled>Upvote</button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" disabled>Downvote</button>
-                                }
+                                <!-- Comment Downvote Button -->
+                                <button id="downvote-comment-@comment.CommentId" class="btn btn-sm btn-outline-danger btn-vote @(userVoteType == -1 ? "selected-vote" : "")"
+                                        onclick="downvoteComment(@comment.CommentId)">
+                                    Downvote
+                                </button>
+                                <span> <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
+
 
                                 <!-- Display upvote and downvote counts -->
                                 <!-- Other buttons (Delete, Soft Delete, Reply) -->
-                                @if (comment.UserId == User.Identity.GetUserId())
+                                if (comment.UserId == User.Identity.GetUserId() || User.IsInRole("Admin") || User.IsInRole("Moderator"))
                                 {
-                                    <button type="button" class="btn btn-sm btn-danger ml-2" onclick="softDeleteComment(@comment.CommentId)">Delete Comment</button>
+                                    <button type="button" class="btn btn-sm btn-danger ml-2" id="soft-delete-comment-@comment.CommentId" onclick="softDeleteComment(@comment.CommentId)">Delete Comment</button>
                                 }
-                                <button type="button" class="btn btn-sm btn-warning ml-2" onclick="deleteComment(@comment.CommentId)">Delete</button>
-
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <button type="button" class="btn btn-sm btn-warning ml-2" onclick="deleteComment(@comment.CommentId)">Delete</button>
+                                }
 
                                 <br /><br />
                                 <button type="button" class="btn btn-sm btn-secondary ml-2 reply-button" data-target="replyForm-@comment.CommentId">Reply</button>
-                            </div>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-success" disabled>Upvote</button>
+                                <span> <span id="comment-upvotes-@comment.CommentId">@comment.Upvotes</span></span>
+                                <button type="button" class="btn btn-sm btn-outline-danger" disabled>Downvote</button>
+                                <span> <span id="comment-downvotes-@comment.CommentId">@comment.Downvotes</span></span>
+
+                            }
                         </div>
-                        <br />
+
+
                     </div>
+
+                </div>
+                <div>
+                    <br />
+                    @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+                    {
+                        <button id="hard-delete-comment-@comment.CommentId" class="btn btn-sm btn-warning ml-2" style="display:none;" onclick="deleteComment(@comment.CommentId)">Delete</button>
+                    }
+                </div>
+
                 }
-            </p>
 
-            <!-- Reply form using a partial view -->
-            <div id="replyForm-@comment.CommentId" class="reply-form-container comment-thread">
-                @Html.Partial("~/Views/Comments/_ReplyForm.cshtml", new ForumApp.Models.CommentViewModel { PostId = comment.PostId, ParentCommentId = comment.CommentId })
-            </div>
 
-            <!-- Recursively display child comments -->
-            @if (comment.Replies.Any())
-            {
-                @Html.Partial("~/Views/Comments/_CommentList.cshtml", comment.Replies.OrderBy(r => r.DateCreated))
-            }
+                <!-- Reply form using a partial view -->
+                <div id="replyForm-@comment.CommentId" class="reply-form-container comment-thread">
+                    @Html.Partial("~/Views/Comments/_ReplyForm.cshtml", new ForumApp.Models.CommentViewModel { PostId = comment.PostId, ParentCommentId = comment.CommentId })
+                </div>
+
+                <!-- Recursively display child comments -->
+                @if (comment.Replies.Any())
+                {
+                    @Html.Partial("~/Views/Comments/_CommentList.cshtml", comment.Replies.OrderBy(r => r.DateCreated))
+                }
         </div>
 
 

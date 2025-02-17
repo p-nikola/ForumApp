@@ -41,9 +41,12 @@
                                 <td>@Html.DisplayFor(m => forum.Description)</td>
                                 <td><span class="badge badge-info text-dark">@forum.Posts.Where(p => p.IsApproved).Count()</span></td>
                                 <td>
-                                    <button data-forum-id="@forum.ForumId" class="btn btn-danger btn-sm js-delete">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </button>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <button data-forum-id="@forum.ForumId" class="btn btn-danger btn-sm js-delete">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -53,8 +56,11 @@
         </div>
 
         <div class="card-footer text-right">
-            <!-- Create new forum button -->
-            @Html.ActionLink("Create New Forum", "Create", new { }, new { @class = "btn btn-success" })
+            @if (User.IsInRole("Admin"))
+            {
+
+                @Html.ActionLink("Create New Forum", "Create", new { }, new { @class = "btn btn-success" })
+            }
         </div>
     </div>
 </div>
@@ -62,6 +68,8 @@
 <!-- Scripts section -->
 @section Scripts {
     <script>
+
+        var isAdmin = @Json.Encode(ViewBag.IsAdmin);
         $(document).ready(function () {
             // Initialize DataTables with server-side processing
             var table = $('#forumsTable').DataTable({
@@ -79,10 +87,15 @@
                     { "data": "PostsCount", "render": function (data, type, row) {
                         return `<span class="badge badge-info text-dark">${data}</span>`;
                     }},
-                    { "data": "ForumId", "render": function (data, type, row) {
-                        return `<button data-forum-id="${data}" class="btn btn-danger btn-sm js-delete">
+                    {
+                        "data": "ForumId", "render": function (data, type, row) {
+                            if (isAdmin) {
+                                return `<button data-forum-id="${data}" class="btn btn-danger btn-sm js-delete">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>`;
+                            } else {
+                                return ''
+                            }
                     }}
                 ]
             });

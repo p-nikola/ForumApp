@@ -41,9 +41,12 @@
                             </div>
                         </td>
                         <td>
-                            <button data-post-id="@post.PostId" class="btn btn-sm btn-danger js-delete">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <button data-post-id="@post.PostId" class="btn btn-sm btn-danger js-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            }
                         </td>
                     </tr>
                 }
@@ -56,13 +59,20 @@
     }
 
     <div class="my-4">
+        @if (User.Identity.IsAuthenticated)
+        {
         @Html.ActionLink("Create New Post", "Create", "Posts", new { forumId = Model.ForumId }, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Back to Forum List", "Index", null, new { @class = "btn btn-secondary ml-2" })
+        }
+        @*@Html.ActionLink("Back to Forum List", "Index", null, new { @class = "btn btn-secondary ml-2" })*@
     </div>
 </div>
 
 @section Scripts {
     <script>
+
+        var isAdmin = @Json.Encode(ViewBag.IsAdmin);
+        var isMod = @Json.Encode(ViewBag.Mod);
+
 $(document).ready(function () {
     var forumId = '@Model.ForumId';  // Get the forumId from the Razor model
 
@@ -70,7 +80,7 @@ $(document).ready(function () {
     if (urlParams.get('postSubmitted') === 'True') {
         bootbox.alert({
             title: "Post Submitted",
-            message: "Your post has been successfully submitted!",
+            message: "Your post has been successfully submitted!\nYou need to wait to get it approved by an admin!",
         });
     }
 
@@ -100,10 +110,15 @@ $(document).ready(function () {
                         <img src='${data.ProfilePictureUrl}' alt='Profile Picture' class='profile-picture ml-2' style='width:40px; height:40px;' />
                     </div>`;
             }},
-            { "data": "PostId", "render": function (data, type, row) {
-                return `<button data-post-id="${data}" class="btn btn-sm btn-danger js-delete">
+            {
+                "data": "PostId", "render": function (data, type, row) {
+                    if (isAdmin || isMod) {
+                        return `<button data-post-id="${data}" class="btn btn-sm btn-danger js-delete">
                           Delete
                         </button>`;
+                    } else {
+                        return '';
+                    }
             }}
         ]
     });

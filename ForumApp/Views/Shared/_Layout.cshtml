@@ -21,6 +21,11 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Add users to a role", "AddUserToRole", "Account", new { area = "" }, new { @class = "nav-link" })
+                        @Html.ActionLink("Approve Posts", "PendingApproval", "Posts", new { area = "" }, new { @class = "nav-link" })
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
 

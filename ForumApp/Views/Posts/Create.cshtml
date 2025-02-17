@@ -1,47 +1,63 @@
-﻿﻿@model ForumApp.Models.Post
+﻿@model ForumApp.Models.Post
 
 @{
     ViewBag.Title = "Create Post";
 }
 
-<h2>Create a New Post in @ViewBag.ForumTitle</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        @Html.HiddenFor(model => model.ForumId)
+<link rel="stylesheet" type="text/css" href="~/Content/Posts/CreateStyle.css" />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-            </div>
-        </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Create a New Post in @ViewBag.ForumTitle</h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 6 })
-                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <!-- Hidden ForumId Field -->
+                        @Html.HiddenFor(model => model.ForumId)
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                        <!-- Title Field -->
+                        <div class="form-group row justify-content-center">
+                            <div class="col-md-6" style="width:45%">
+                                <label for="Title" class="col-md-3 col-form-label text-md-right center-text" style="margin-left:100px">Title</label>
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter post title" } })
+                                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger mt-1" })
+                            </div>
+                        </div>
+
+                        <!-- Content Field -->
+                        <div class="form-group row justify-content-center">
+                            <div class="col-md-6" style="width:47%">
+                                <label for="Content" class="col-md-3 col-form-label text-md-right center-text" style="margin-left:100px">Content</label>
+                                @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 6, placeholder = "Write your post content here..." })
+                                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger mt-1" })
+                            </div>
+                        </div>
+                        <br />
+                        <!-- Submit and Back Buttons -->
+                        <div class="form-group row justify-content-center">
+                            <div class="col-md-6 text-center">
+                                <button type="submit" class="btn btn-primary" style="margin-right:100px">Create</button>
+                                <br />
+                                <br />
+                                @Html.ActionLink("Back to Forum", "Details", "Forums", new { id = ViewBag.ForumId }, new { @class = "btn btn-secondary ml-2", style = "margin-right:100px" })
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to Forum", "Details", "Forums", new { id = ViewBag.ForumId }, new { @class = "btn btn-secondary" })
 </div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
 }

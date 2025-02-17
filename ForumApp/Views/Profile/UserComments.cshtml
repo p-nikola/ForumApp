@@ -7,7 +7,7 @@
 <div class="user-comments-container">
     <h2 class="user-comments-title">@ViewBag.Username's Comments</h2>
 
-    @if (Model.Any())
+    @if (Model.Any(c=>!c.IsSoftDeleted))
     {
         <div class="comments-list">
             @foreach (var commentGroup in Model.GroupBy(c => c.Post.PostId))  // Group comments by post

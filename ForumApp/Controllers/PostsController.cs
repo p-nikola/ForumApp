@@ -6,15 +6,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace ForumApp.Controllers
 {
+    [Authorize(Roles = "Admin,Moderator,User")]
     public class PostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Posts/Details/5
         // PostsController.cs - In the Details action
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             var post = db.Posts
@@ -27,6 +30,10 @@ namespace ForumApp.Controllers
             {
                 return HttpNotFound();
             }
+
+            var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var roles = userManager.GetRoles(post.UserId);
+            ViewBag.UserRole = roles.FirstOrDefault() ?? "User"; // Assign a default role if none is found
 
             var userId = User.Identity.GetUserId();
             ViewBag.UserPostVoteType = post.Votes.FirstOrDefault(v => v.UserId == userId)?.VoteType ?? 0;
@@ -70,6 +77,14 @@ namespace ForumApp.Controllers
             {
                 post.DateCreated = DateTime.Now;
                 post.UserId = User.Identity.GetUserId();
+
+                if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    post.IsApproved = true;
+                    db.Posts.Add(post);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Forums", new { id = post.ForumId}); 
+                }
                 post.IsApproved = false; // Post is not approved by default
                 db.Posts.Add(post);
                 db.SaveChanges();
@@ -81,36 +96,37 @@ namespace ForumApp.Controllers
             return View(post);
         }
 
-       /* [HttpPost]
-        public ActionResult Up
-       
-        
-        
-        Post(int postId)
-        {
-            var post = db.Posts.Find(postId);
-            if (post != null)
-            {
-                post.Upvotes++;
-                db.SaveChanges();
-                return Json(new { success = true, upvotes = post.Upvotes });
-            }
-            return Json(new { success = false });
-        }
+        /* [HttpPost]
+         public ActionResult Up
 
-        [HttpPost]
-        public ActionResult DownvotePost(int postId)
-        {
-            var post = db.Posts.Find(postId);
-            if (post != null)
-            {
-                post.Downvotes++;
-                db.SaveChanges();
-                return Json(new { success = true, downvotes = post.Downvotes });
-            }
-            return Json(new { success = false });
-        }
-*/
+
+
+         Post(int postId)
+         {
+             var post = db.Posts.Find(postId);
+             if (post != null)
+             {
+                 post.Upvotes++;
+                 db.SaveChanges();
+                 return Json(new { success = true, upvotes = post.Upvotes });
+             }
+             return Json(new { success = false });
+         }
+
+         [HttpPost]
+         public ActionResult DownvotePost(int postId)
+         {
+             var post = db.Posts.Find(postId);
+             if (post != null)
+             {
+                 post.Downvotes++;
+                 db.SaveChanges();
+                 return Json(new { success = true, downvotes = post.Downvotes });
+             }
+             return Json(new { success = false });
+         }
+ */
+        [Authorize(Roles = "Admin,Moderator")]
         public ActionResult DeletePost(int id)
         {
             Post post = db.Posts.Find(id);
@@ -120,17 +136,18 @@ namespace ForumApp.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public ActionResult PostPendingApproval()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult PendingApproval()
         {
             var pendingPosts = db.Posts.Where(p => !p.IsApproved).ToList();
             return View(pendingPosts);
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Approve(int id)
         {
             var post = db.Posts.Find(id);
@@ -142,6 +159,20 @@ namespace ForumApp.Controllers
 
             return RedirectToAction("PendingApproval"); // Redirect back to the pending posts list
         }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Disapprove(int id)
+        {
+            var post = db.Posts.Find(id);
+            if (post != null)
+            {
+                db.Posts.Remove(post); // Remove the post from the database
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("PendingApproval"); // Redirect back to the pending posts list
+        }
+
 
 
         [HttpPost]

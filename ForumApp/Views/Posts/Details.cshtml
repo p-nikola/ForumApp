@@ -7,9 +7,24 @@
 
 
 
+
+
+
 <h2>@Model.Title</h2>
 <p>@Model.Content</p>
-<p>Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle me-2" style="width: 100px; height: 100px; object-fit: cover;" /></p>
+<p>
+    Posted on @Model.DateCreated by @Html.ActionLink(Model.User.UserName, "Index", "Profile", new { id = Model.UserId }, new { @class = "username-link" }) <img src="@Model.User.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle me-2" style="width: 100px; height: 100px; object-fit: cover;" />
+    @if (ViewBag.UserRole == "Admin" || ViewBag.UserRole == "Moderator")
+    {
+        <span style="font-size:30px;color:gold;font-weight:bold">(@ViewBag.UserRole)</span>
+
+    }
+    else
+    {
+        <span class="text-dark" style="font-size:30px;font-weight:bold">(@ViewBag.UserRole)</span>
+    }
+</p>
+
 
 <div>
     @if (User.Identity.IsAuthenticated)
@@ -43,22 +58,32 @@
 
 
 <h3>Comments</h3>
-
-<h4>Leave a Comment</h4>
-@using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { id = "postCommentForm" }))
+@if (User.Identity.IsAuthenticated)
 {
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.PostId)
+    <h4>Leave a Comment</h4>
+    using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { id = "postCommentForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.PostId)
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Content, "Comment")
-        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 4 })
-        @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Post Comment" class="btn btn-primary" />
-    </div>
-    <div id="postCommentError" class="text-danger"></div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Content, "Comment")
+            @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 4 })
+            @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Post Comment" class="btn btn-primary" />
+        </div>
+        <div id="postCommentError" class="text-danger"></div>
+    }
+
+
+
+
+}
+else
+{
+    <p>Please <a href="@Url.Action("Login", "Account")">log in</a> to leave a comment.</p>
 }
 
 @if (Model.Comments.Any())
@@ -78,8 +103,7 @@ else
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
+
 
     <script>
     $(document).ready(function () {
@@ -110,20 +134,29 @@ else
 
 
     function deleteComment(commentId) {
-        if (confirm('Are you sure you want to delete this comment and all its replies?')) {
-            $.post('@Url.Action("DeleteComment", "Comments")', { commentId: commentId }, function (data) {
-                if (data.success) {
-                    console.log("Deleting comment " + commentId);
-                    removeCommentAndReplies(commentId);  // Call to remove comments from the DOM
-                } else {
-                    alert('Failed to delete comment: ' + data.error);
-                }
-            }).fail(function (xhr, status, error) {
-                // Handle error
-                alert('An error occurred while deleting the comment: ' + error);
-            });
-        }
+        bootbox.confirm("Are you sure you want to delete this comment and all its replies?", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '@Url.Action("DeleteComment", "Comments")',
+                    type: 'POST',
+                    data: { commentId: commentId },
+                    success: function (data) {
+                        if (data.success) {
+                            console.log("Deleting comment " + commentId);
+                            removeCommentAndReplies(commentId);  // Call to remove comments from the DOM
+                        } else {
+                            bootbox.alert('Failed to delete comment: ' + data.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error deleting comment:", error);
+                        bootbox.alert('An error occurred while deleting the comment.');
+                    }
+                });
+            }
+        });
     }
+
 
     function removeCommentAndReplies(commentId) {
         var commentWrapper = $('#comment-wrapper-' + commentId);
@@ -146,18 +179,39 @@ else
     }
 
     function softDeleteComment(commentId) {
-    if (confirm('Are you sure you want to delete this comment?')) {
-        $.post('@Url.Action("SoftDeleteComment", "Comments")', { commentId: commentId }, function (data) {
-            if (data.success) {
-                // Replace the comment content with "User deleted this comment"
-                $('#comment-' + commentId).find('p:first').html('<em>User deleted this comment</em>');
-                $('#comment-buttons-' + commentId).remove();
-            } else {
-                alert('Failed to delete comment: ' + data.message);
+        console.log("Tuka sum")
+
+        bootbox.confirm("Are you sure you want to delete this comment?", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '@Url.Action("SoftDeleteComment", "Comments")',
+                    type: 'POST',
+                    data: { commentId: commentId },
+                    success: function (data) {
+                        if (data.success) {
+                            // Replace the comment content with "User deleted this comment"
+                            $('#comment-' + commentId).find('p:first').html('<div >User deleted this comment</div>');
+                            $('#comment-buttons-' + commentId).remove();
+                            $('#upvote-comment-' + commentId).remove(); // Hide the upvote button if needed
+                            $('#downvote-comment-' + commentId).remove(); // Hide the downvote button if needed
+
+                            // Optionally, disable the soft delete button
+                            $('#soft-delete-comment-' + commentId).remove()
+                            $('#hard-delete-comment-' + commentId).css('display', 'block');
+                        } else {
+                            bootbox.alert('Failed to delete comment: ' + data.message);
+                        }
+                    },
+                    error: function (err) {
+                        console.log("Error deleting comment:", err);
+                        bootbox.alert('An error occurred while deleting the comment.');
+                    }
+                });
             }
         });
     }
-}
+
+
 
     // Function to hide all reply forms and set up event handlers for reply buttons and cancel buttons
     function hideReplyForms() {
@@ -194,7 +248,7 @@ else
             },
             error: function (xhr, status, error) {
                 // Handle error
-                alert('An error occurred while submitting the reply: ' + error);
+                alert('This content is larger than 500 characters!');
             }
         });
     });

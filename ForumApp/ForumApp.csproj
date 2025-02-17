@@ -438,10 +438,12 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\Forum\ForumCreate.css" />
     <Content Include="Content\Forum\ForumDetails.css" />
     <Content Include="Content\Images\background.jpg" />
     <Content Include="Content\Posts\CommentList.css" />
     <Content Include="Content\Posts\CommentsReplies.css" />
+    <Content Include="Content\Posts\CreatStyle.css" />
     <Content Include="Content\Posts\PostsStyle.css" />
     <Content Include="Content\UserStyles\CommentsStyle.css" />
     <Content Include="Content\UserStyles\EditProfile.css" />

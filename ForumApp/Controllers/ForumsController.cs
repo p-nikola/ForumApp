@@ -8,11 +8,13 @@ using System.Web.Mvc;
 namespace ForumApp.Controllers
 {
 
+    [Authorize(Roles = "Admin,Moderator,User")]
     public class ForumsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Forums
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var breadcrum = new List<BreadcrumbItem>
@@ -20,18 +22,39 @@ namespace ForumApp.Controllers
                 new BreadcrumbItem { Title = "Forums", IsActive = true }
             };
 
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.IsAdmin = User.IsInRole("Admin");
+            }
+            else
+            {
+                ViewBag.IsAdmin = false;
+            }
+
             ViewBag.Breadcrumbs = breadcrum;
 
             return View(db.Forums.ToList());
         }
 
         // GET: Forums/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             var forum = db.Forums.Include("Posts").FirstOrDefault(f => f.ForumId == id);
             if (forum == null)
             {
                 return HttpNotFound();
+            }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.IsAdmin = User.IsInRole("Admin");
+                ViewBag.Mod = User.IsInRole("Moderator");
+            }
+            else
+            {
+                ViewBag.IsAdmin = false;
+                ViewBag.Mod = false;
             }
 
             var breadcrumb = new List<BreadcrumbItem>
@@ -46,6 +69,7 @@ namespace ForumApp.Controllers
         }
 
         // GET: Forums/Create
+        [Authorize(Roles = "Admin,Moderator,User")]
         public ActionResult Create()
         {
             return View();
@@ -65,7 +89,7 @@ namespace ForumApp.Controllers
             return View(forum);
         }
 
-
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteForum(int id)
         {
             Forum forum = db.Forums.Find(id);
@@ -74,7 +98,7 @@ namespace ForumApp.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
         [Route("Forums/GetPosts")]
         public ActionResult GetPosts(int draw, int start, int length, string search, string sortColumn, string sortDirection, int forumId)
@@ -160,6 +184,7 @@ namespace ForumApp.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult GetForums(int draw, int start, int length)
         {
